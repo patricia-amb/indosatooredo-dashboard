@@ -247,6 +247,18 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   overflow:auto;
 }
 
+
+.activity-pill{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:8px;
+  background:#fff7ed;
+  color:#c2410c;
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
 </style>
 </head>
 <body>
@@ -307,7 +319,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   <section class="second-grid">
     <div class="card panel"><h3>Spam Calls by Location</h3><div class="location-list" id="locationList"></div></div>
     <div class="card panel"><h3>Spam Calls by Day</h3><div class="day-chart" id="dayChart"></div></div>
-    <div class="card panel"><h3>Live Activity Feed <span style="float:right;color:#ed1c24;font-size:12px">● LIVE</span></h3><table class="live-table"><thead><tr><th>Time</th><th>Number</th><th>Location</th><th>Status</th><th>Risk</th></tr></thead><tbody id="liveFeed"></tbody></table></div>
+    <div class="card panel"><h3>Live Activity Feed <span style="float:right;color:#ed1c24;font-size:12px">● LIVE</span></h3><table class="live-table"><thead><tr><th>Time</th><th>Number</th><th>Location</th><th>Status</th><th>Activity Detection</th></tr></thead><tbody id="liveFeed"></tbody></table></div>
   </section>
 
   <section class="bottom-grid">
@@ -333,17 +345,32 @@ function renderDay(){const vals=DATA.daily.values,labels=DATA.daily.labels,max=M
 function actionClass(a){if(a.includes('Block'))return'action-red';if(a.includes('Investigate'))return'action-orange';if(a.includes('Monitor'))return'action-blue';return'action-green'}
 function renderTable(){document.getElementById('riskTable').innerHTML=DATA.risk.map((r,i)=>`<tr><td>${i+1}</td><td><b>${r.caller_number}</b></td><td>${r.location}</td><td>${r.total_calls}</td><td>${r.spam_calls}</td><td><b style="color:${r.spam_rate>50?'#ed1c24':'#16a34a'}">${r.spam_rate}%</b></td><td class="risk-score">${r.risk_score}</td><td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td><td class="${actionClass(r.recommended_action)}">🛡 ${r.recommended_action}</td><td><button class="action-btn btn-block" onclick="takeAction('${r.caller_number}','Block')">Block</button><button class="action-btn btn-investigate" onclick="takeAction('${r.caller_number}','Investigate')">Investigate</button><button class="action-btn btn-safe" onclick="takeAction('${r.caller_number}','Whitelist')">Whitelist</button></td></tr>`).join('')}
 function renderFeed(){
-  const source = DATA.risk.filter(r => r.risk_level === 'Critical' || r.risk_level === 'High');
-  const list = source.length ? source : DATA.risk;
-  const rows=[];
-  for(let i=0;i<8;i++) rows.push(list[(feedOffset+i)%list.length]);
-  document.getElementById('liveFeed').innerHTML=rows.map((r,i)=>`
+  const activityTypes = [
+    'Repeated Short Calls',
+    'Multiple Receivers',
+    'Missed Call Spike',
+    'Outbound Burst',
+    'Unusual Night Activity',
+    'Spam Suspected',
+    'High Call Frequency',
+    'Short Duration Pattern'
+  ];
+
+  const source = DATA.risk && DATA.risk.length ? DATA.risk : [];
+  const rows = [];
+  for(let i=0;i<8 && source.length;i++){
+    const r = source[(feedOffset+i)%source.length];
+    const activity = activityTypes[(feedOffset+i)%activityTypes.length];
+    rows.push({ ...r, activity });
+  }
+
+  document.getElementById('liveFeed').innerHTML = rows.map((r,i)=>`
     <tr>
       <td>${new Date(Date.now()-i*12000).toLocaleTimeString('id-ID')}</td>
       <td>${r.caller_number}</td>
       <td>${r.location}</td>
       <td>${r.spam_calls>0?'Spam Call':'Normal Call'}</td>
-      <td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td>
+      <td><span class="activity-pill">${r.activity}</span></td>
     </tr>`).join('')
 }
 function renderActionLog(){
