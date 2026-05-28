@@ -241,6 +241,12 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   transition:.2s ease;
 }
 
+
+.action-log{
+  max-height:520px;
+  overflow:auto;
+}
+
 </style>
 </head>
 <body>
@@ -271,7 +277,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
     </div>
 
     <button class="login-btn" onclick="loginDashboard()">Login</button>
-    
+    <div class="login-note">Demo password: admin123</div>
   </div>
 </div>
 <div class="dashboard">
@@ -306,14 +312,14 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
 
   <section class="bottom-grid">
     <div class="card panel"><h3>Number Risk Monitoring & Action</h3><table class="risk-table"><thead><tr><th>Rank</th><th>Phone Number</th><th>Location</th><th>Total Calls</th><th>Spam Calls</th><th>Spam Rate</th><th>Risk Score</th><th>Risk Level</th><th>Recommended Action</th><th>Company Action</th></tr></thead><tbody id="riskTable"></tbody></table></div>
-    <div class="card panel"><h3>Summary Insights</h3><div class="summary" id="summary"></div><h3 style="margin-top:15px">Action Log</h3><div class="action-log" id="actionLog"></div></div>
+    <div class="card panel"><h3>Action Log</h3><div class="action-log" id="actionLog"></div></div>
   </section>
 </div>
 
 <script>
 const DATA = {"kpi": {"total_calls": 1500, "spam_calls": 350, "spam_rate": 23.33, "total_duration": 8962, "unique_numbers": 461, "high_risk": 139, "critical": 56, "blocked_queue": 56}, "monthly": {"labels": ["Jan", "Feb", "Mar", "Apr"], "spam": [100, 96, 87, 67], "total": [441, 358, 378, 323]}, "hourly": {"labels": ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"], "values": [0, 0, 0, 0, 0, 0, 0, 0, 34, 41, 39, 39, 32, 0, 0, 0, 0, 0, 44, 51, 39, 31, 0, 0]}, "daily": {"labels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "values": [55, 44, 43, 57, 52, 51, 48]}, "status_counts": {"labels": ["Normal", "Low", "Medium", "High", "Critical"], "values": [101, 106, 115, 83, 56]}, "locations": [{"province": "Sumatera Utara", "total_calls": 201, "spam_calls": 100, "Avg_Duration_Seconds": 233.7, "Short_Calls": 83, "Unique_Callers": 43, "spam_rate": 49.8, "risk_index": 100, "risk_level": "Critical", "percent": 28.6}, {"province": "Jawa Tengah", "total_calls": 281, "spam_calls": 68, "Avg_Duration_Seconds": 354.9, "Short_Calls": 52, "Unique_Callers": 87, "spam_rate": 24.2, "risk_index": 61, "risk_level": "High", "percent": 19.4}, {"province": "DKI Jakarta", "total_calls": 188, "spam_calls": 54, "Avg_Duration_Seconds": 304.7, "Short_Calls": 43, "Unique_Callers": 56, "spam_rate": 28.7, "risk_index": 55, "risk_level": "High", "percent": 15.4}, {"province": "Bali", "total_calls": 194, "spam_calls": 46, "Avg_Duration_Seconds": 338.4, "Short_Calls": 35, "Unique_Callers": 59, "spam_rate": 23.7, "risk_index": 46, "risk_level": "Medium", "percent": 13.1}, {"province": "Jawa Barat", "total_calls": 164, "spam_calls": 29, "Avg_Duration_Seconds": 404.5, "Short_Calls": 20, "Unique_Callers": 55, "spam_rate": 17.7, "risk_index": 30, "risk_level": "Low", "percent": 8.3}, {"province": "Banten", "total_calls": 175, "spam_calls": 27, "Avg_Duration_Seconds": 408.5, "Short_Calls": 22, "Unique_Callers": 60, "spam_rate": 15.4, "risk_index": 28, "risk_level": "Low", "percent": 7.7}, {"province": "Jawa Timur", "total_calls": 164, "spam_calls": 26, "Avg_Duration_Seconds": 412.5, "Short_Calls": 17, "Unique_Callers": 51, "spam_rate": 15.9, "risk_index": 27, "risk_level": "Low", "percent": 7.4}, {"province": "DI Yogyakarta", "total_calls": 133, "spam_calls": 0, "Avg_Duration_Seconds": 470.9, "Short_Calls": 0, "Unique_Callers": 50, "spam_rate": 0.0, "risk_index": 0, "risk_level": "Low", "percent": 0.0}], "risk": [{"caller_number": "085718386620", "location": "Sumatera Utara", "total_calls": 21, "spam_calls": 18, "spam_rate": 85.7, "avg_duration_min": 1.45, "unique_receivers": 21, "risk_score": 81, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085843428810", "location": "Jawa Tengah", "total_calls": 23, "spam_calls": 22, "spam_rate": 95.7, "avg_duration_min": 0.47, "unique_receivers": 23, "risk_score": 81, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085729401825", "location": "Sumatera Utara", "total_calls": 18, "spam_calls": 16, "spam_rate": 88.9, "avg_duration_min": 1.38, "unique_receivers": 18, "risk_score": 80, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085829401825", "location": "Sumatera Utara", "total_calls": 21, "spam_calls": 19, "spam_rate": 90.5, "avg_duration_min": 0.88, "unique_receivers": 21, "risk_score": 79, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085889744427", "location": "Banten", "total_calls": 19, "spam_calls": 18, "spam_rate": 94.7, "avg_duration_min": 0.81, "unique_receivers": 19, "risk_score": 79, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085818386620", "location": "Sumatera Utara", "total_calls": 24, "spam_calls": 21, "spam_rate": 87.5, "avg_duration_min": 1.13, "unique_receivers": 24, "risk_score": 78, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085769899045", "location": "Jawa Tengah", "total_calls": 2, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 4.55, "unique_receivers": 2, "risk_score": 3, "risk_level": "Medium", "recommended_action": "Monitor", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085807895066", "location": "Jawa Tengah", "total_calls": 2, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 7.18, "unique_receivers": 2, "risk_score": 3, "risk_level": "Medium", "recommended_action": "Monitor", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085813958459", "location": "Bali", "total_calls": 5, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 6.61, "unique_receivers": 5, "risk_score": 3, "risk_level": "Medium", "recommended_action": "Monitor", "risk_reason": "perlu monitoring"}, {"caller_number": "085831110365", "location": "Banten", "total_calls": 6, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 8.04, "unique_receivers": 6, "risk_score": 3, "risk_level": "Medium", "recommended_action": "Monitor", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085806813038", "location": "Jawa Barat", "total_calls": 3, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 6.9, "unique_receivers": 3, "risk_score": 2, "risk_level": "Low", "recommended_action": "Low Monitoring", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085806846420", "location": "DI Yogyakarta", "total_calls": 4, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 7.75, "unique_receivers": 4, "risk_score": 2, "risk_level": "Low", "recommended_action": "Low Monitoring", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085801589181", "location": "Jawa Tengah", "total_calls": 2, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 5.72, "unique_receivers": 2, "risk_score": 2, "risk_level": "Low", "recommended_action": "Low Monitoring", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085866764608", "location": "Jawa Timur", "total_calls": 4, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 8.3, "unique_receivers": 4, "risk_score": 2, "risk_level": "Low", "recommended_action": "Low Monitoring", "risk_reason": "missed/failed tinggi"}]};
 let feedOffset = 0;
-let actionLog = [];
+let actionLog = JSON.parse(localStorage.getItem('indosat_action_log') || '[]');
 
 function fmt(n){return Number(n||0).toLocaleString('id-ID')}
 function updateClock(){const now=new Date();document.getElementById('liveTime').textContent=now.toLocaleTimeString('id-ID');document.getElementById('liveDate').textContent=now.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}
@@ -326,10 +332,34 @@ function renderLocations(){const max=Math.max(...DATA.locations.map(l=>l.spam_ca
 function renderDay(){const vals=DATA.daily.values,labels=DATA.daily.labels,max=Math.max(...vals,1);document.getElementById('dayChart').innerHTML=vals.map((v,i)=>`<div class="day-col"><b style="font-size:11px;color:${v===max?'#ed1c24':'#111827'}">${v}</b><div class="day-bar" style="height:${Math.max(10,v/max*175)}px;${v===max?'background:#ff3341':''}"></div><div class="day-label">${labels[i]}</div></div>`).join('')}
 function actionClass(a){if(a.includes('Block'))return'action-red';if(a.includes('Investigate'))return'action-orange';if(a.includes('Monitor'))return'action-blue';return'action-green'}
 function renderTable(){document.getElementById('riskTable').innerHTML=DATA.risk.map((r,i)=>`<tr><td>${i+1}</td><td><b>${r.caller_number}</b></td><td>${r.location}</td><td>${r.total_calls}</td><td>${r.spam_calls}</td><td><b style="color:${r.spam_rate>50?'#ed1c24':'#16a34a'}">${r.spam_rate}%</b></td><td class="risk-score">${r.risk_score}</td><td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td><td class="${actionClass(r.recommended_action)}">🛡 ${r.recommended_action}</td><td><button class="action-btn btn-block" onclick="takeAction('${r.caller_number}','Block')">Block</button><button class="action-btn btn-investigate" onclick="takeAction('${r.caller_number}','Investigate')">Investigate</button><button class="action-btn btn-safe" onclick="takeAction('${r.caller_number}','Whitelist')">Whitelist</button></td></tr>`).join('')}
-function renderFeed(){const rows=[];for(let i=0;i<8;i++)rows.push(DATA.risk[(feedOffset+i)%DATA.risk.length]);document.getElementById('liveFeed').innerHTML=rows.map((r,i)=>`<tr><td>${new Date(Date.now()-i*12000).toLocaleTimeString('id-ID')}</td><td>${r.caller_number}</td><td>${r.location}</td><td>${r.spam_calls>0?'Spam Call':'Normal Call'}</td><td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td></tr>`).join('')}
-function renderSummary(){const peakLoc=DATA.locations[0];const maxHour=DATA.hourly.values.indexOf(Math.max(...DATA.hourly.values));document.getElementById('summary').innerHTML=`<div class="summary-item"><div class="summary-icon i-red">⚠️</div><div class="summary-text">Spam rate saat ini <b>${DATA.kpi.spam_rate}%</b>.</div></div><div class="summary-item"><div class="summary-icon i-blue">⏱</div><div class="summary-text">Puncak spam terjadi pada <b>${String(maxHour).padStart(2,'0')}:00 WIB</b>.</div></div><div class="summary-item"><div class="summary-icon i-purple">⌖</div><div class="summary-text">Lokasi spam tertinggi <b>${peakLoc.province}</b> (${peakLoc.spam_calls} spam calls).</div></div><div class="summary-item"><div class="summary-icon i-green">🛡</div><div class="summary-text"><b>${DATA.kpi.high_risk}</b> nomor masuk High & Critical Risk.</div></div>`}
-function renderActionLog(){document.getElementById('actionLog').innerHTML=actionLog.length?actionLog.map(l=>`<div class="log-item"><b>${l.action}</b> · ${l.number}<br><span>${l.time}</span></div>`).join(''):`<div class="log-item">Belum ada tindakan manual.</div>`}
-function takeAction(number, action){actionLog.unshift({number, action, time:new Date().toLocaleTimeString('id-ID')});renderActionLog()}
+function renderFeed(){
+  const source = DATA.risk.filter(r => r.risk_level === 'Critical' || r.risk_level === 'High');
+  const list = source.length ? source : DATA.risk;
+  const rows=[];
+  for(let i=0;i<8;i++) rows.push(list[(feedOffset+i)%list.length]);
+  document.getElementById('liveFeed').innerHTML=rows.map((r,i)=>`
+    <tr>
+      <td>${new Date(Date.now()-i*12000).toLocaleTimeString('id-ID')}</td>
+      <td>${r.caller_number}</td>
+      <td>${r.location}</td>
+      <td>${r.spam_calls>0?'Spam Call':'Normal Call'}</td>
+      <td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td>
+    </tr>`).join('')
+}
+function renderActionLog(){
+  const saved = localStorage.getItem('indosat_action_log');
+  if(saved){
+    try{ actionLog = JSON.parse(saved); }catch(e){ actionLog = []; }
+  }
+  document.getElementById('actionLog').innerHTML = actionLog.length
+    ? actionLog.map(l=>`<div class="log-item"><b>${l.action}</b> · ${l.number}<br><span>${l.time}</span></div>`).join('')
+    : `<div class="log-item">Belum ada tindakan manual.</div>`;
+}
+function takeAction(number, action){
+  actionLog.unshift({number, action, time:new Date().toLocaleString('id-ID')});
+  localStorage.setItem('indosat_action_log', JSON.stringify(actionLog));
+  renderActionLog();
+}
 function refreshDashboard(){feedOffset=(feedOffset+1)%DATA.risk.length;DATA.risk.forEach((r,idx)=>{if(idx%4===feedOffset%4){r.risk_score=Math.max(0,Math.min(100,r.risk_score+(Math.random()>.5?1:-1)))}});renderFeed();renderTable();renderKpi()}
 
 function loginDashboard(){
@@ -355,7 +385,7 @@ window.addEventListener('load',()=>{
   }
 });
 
-function renderAll(){updateClock();renderKpi();renderTrend();renderHour();renderRiskDonut();renderLocations();renderDay();renderFeed();renderTable();renderSummary();renderActionLog()}
+function renderAll(){updateClock();renderKpi();renderTrend();renderHour();renderRiskDonut();renderLocations();renderDay();renderFeed();renderTable();renderActionLog()}
 setInterval(updateClock,1000);setInterval(()=>{feedOffset=(feedOffset+1)%DATA.risk.length;renderFeed()},4000);renderAll();
 </script>
 </body>
