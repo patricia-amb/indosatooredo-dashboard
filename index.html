@@ -1,505 +1,235 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Indosat Ooredoo Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-:root {
-  --red:#ed1c24; --red2:#ff3341; --yellow:#ffd100; --orange:#ff8a00;
-  --green:#21b573; --blue:#2f7df6; --purple:#8b5cf6; --ink:#111827;
-  --muted:#6b7280; --line:#e5e7eb; --card:#ffffff; --bg:#f8fafc;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(--ink)}
-.dashboard{max-width:1540px;margin:0 auto;padding:22px}
-.header{display:flex;justify-content:space-between;align-items:flex-start;gap:22px;margin-bottom:18px}
-.brand{display:flex;gap:22px;align-items:center}
-.logo{display:flex;align-items:center;gap:10px;min-width:220px}
-.logo-word{font-size:42px;letter-spacing:-2px;font-weight:900;color:#2b2b2b;line-height:.9}
-.logo-sub{font-size:11px;letter-spacing:2px;color:#555;font-weight:700;margin-top:4px}
-.logo-dots{position:relative;width:44px;height:38px}
-.logo-dots span{position:absolute;border-radius:50%}
-.logo-dots .d1{width:26px;height:26px;background:var(--red);right:10px;top:8px}
-.logo-dots .d2{width:22px;height:22px;background:var(--yellow);right:0;top:0}
-.logo-dots .d3{width:20px;height:20px;background:#7c3aed;right:0;bottom:0}
-.title h1{margin:0;font-size:32px;letter-spacing:-.8px}
-.title p{margin:7px 0 0;font-size:16px;color:#111827}
-.header-right{display:flex;align-items:center;gap:20px}
-.live-box{display:grid;grid-template-columns:auto 1fr;column-gap:9px;align-items:center;min-width:160px}
-.live-dot{width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 0 5px rgba(237,28,36,.1)}
-.live-text{color:var(--red);font-weight:900;font-size:13px}
-.time-label{grid-column:1/3;margin-top:8px;font-size:13px;color:#111}
-.time-value{grid-column:1/3;font-size:26px;font-weight:900;margin-top:3px}
-.date-value{grid-column:1/3;font-size:12px;font-weight:700;color:#4b5563;margin-top:3px}
-.refresh{border:0;background:var(--red);color:#fff;border-radius:12px;padding:16px 22px;font-weight:900;cursor:pointer;box-shadow:0 12px 26px rgba(237,28,36,.22)}
-.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 22px rgba(15,23,42,.06)}
-.kpi{padding:18px 16px 12px;min-height:145px;position:relative;overflow:hidden}
-.kpi-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.kpi-icon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:20px}
-.i-green{background:#dcfce7;color:#16a34a}.i-red{background:#fee2e2;color:#dc2626}.i-blue{background:#dbeafe;color:#2563eb}.i-purple{background:#f3e8ff;color:#9333ea}.i-yellow{background:#dcfce7;color:#b45309}
-.kpi-title{font-size:14px;font-weight:800}
-.kpi-value{font-size:31px;font-weight:900;margin-bottom:7px;letter-spacing:-.8px}
-.kpi-change{font-size:12px;font-weight:800}.up{color:#16a34a}.down{color:#dc2626}
-.spark{position:absolute;left:12px;right:12px;bottom:8px;height:38px}
-.main-grid{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:12px;margin-bottom:12px}
-.second-grid{display:grid;grid-template-columns:1fr .9fr .95fr;gap:12px;margin-bottom:12px}
-.bottom-grid{display:grid;grid-template-columns:1fr 350px;gap:12px}
-.panel{padding:14px}
-.panel h3{margin:0 0 12px;font-size:17px}
-.line-svg{width:100%;height:240px}
-.bar-chart{height:240px;display:flex;align-items:flex-end;gap:6px;padding:10px 8px 25px 8px;border-left:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
-.bar-group{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:4px}
-.bar{width:100%;min-height:5px;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#ff3341,#ff9aa2)}
-.bar-label{font-size:10px;color:#4b5563}
-.donut-wrap{height:240px;display:grid;grid-template-columns:170px 1fr;align-items:center;gap:16px}
-.donut{width:160px;height:160px;border-radius:50%;background:conic-gradient(#21b573 0 29%, #2f7df6 29% 51%, #fbbf24 51% 73%, #ff8a00 73% 90%, #ff3341 90% 100%);display:grid;place-items:center}
-.donut-inner{width:92px;height:92px;border-radius:50%;background:white;display:grid;place-items:center;text-align:center;font-weight:900;font-size:23px}
-.donut-inner small{display:block;font-size:11px;font-weight:700;color:#555}
-.legend{display:grid;gap:12px;font-size:13px}
-.legend-row{display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:10px}
-.swatch{width:12px;height:12px;border-radius:4px}
-.location-list{display:grid;gap:12px;height:240px;overflow:hidden}
-.location-row{display:grid;grid-template-columns:135px 1fr 60px 45px;align-items:center;gap:12px;font-size:13px}
-.loc-name{font-weight:800;display:flex;gap:8px;align-items:center}
-.pin{color:var(--red)}
-.progress{height:7px;border-radius:999px;background:#edf0f4;overflow:hidden}
-.progress span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--red),#ff8992)}
-.day-chart{height:240px;display:flex;align-items:flex-end;gap:14px;padding:12px 8px 25px;border-left:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
-.day-col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:5px}
-.day-bar{width:44px;border-radius:8px 8px 0 0;background:linear-gradient(180deg,#ff3341,#ffb3b8)}
-.day-label{font-size:12px;color:#4b5563}
-.live-table,.risk-table{width:100%;border-collapse:collapse;font-size:12px}
-.live-table th,.risk-table th{text-align:left;color:#4b5563;font-size:11px;padding:8px 5px;border-bottom:1px solid #e5e7eb;background:#f8fafc}
-.live-table td,.risk-table td{padding:7px 5px;border-bottom:1px solid #f1f5f9}
-.risk-pill{display:inline-block;padding:4px 8px;border-radius:7px;font-weight:900;font-size:11px}
-.Critical{background:#fee2e2;color:#dc2626}.High{background:#ffedd5;color:#ea580c}.Medium{background:#fef3c7;color:#b45309}.Low{background:#dbeafe;color:#2563eb}.Normal{background:#dcfce7;color:#16a34a}
-.risk-score{font-weight:900}.action-red{color:#dc2626;font-weight:800}.action-orange{color:#ea580c;font-weight:800}.action-blue{color:#2563eb;font-weight:800}.action-green{color:#16a34a;font-weight:800}
-.action-btn{border:0;border-radius:8px;padding:6px 8px;font-size:11px;font-weight:800;cursor:pointer;margin:2px}
-.btn-block{background:#fee2e2;color:#dc2626}.btn-investigate{background:#ffedd5;color:#ea580c}.btn-safe{background:#dcfce7;color:#16a34a}
-.summary{display:grid;gap:12px}
-.summary-item{border:1px solid #e5e7eb;border-radius:12px;padding:12px;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center}
-.summary-icon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:20px}
-.summary-text{font-size:13px;line-height:1.45}
-.action-log{max-height:210px;overflow:auto;display:grid;gap:8px;margin-top:10px}
-.log-item{font-size:12px;border:1px solid #e5e7eb;border-radius:10px;padding:9px;background:#f8fafc}
-@media(max-width:1200px){.kpis,.main-grid,.second-grid,.bottom-grid{grid-template-columns:1fr}.header{flex-direction:column}}
-
-
-.login-screen{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  background:
-    radial-gradient(circle at 18% 12%, rgba(255,209,0,.38), transparent 26%),
-    radial-gradient(circle at 86% 20%, rgba(237,28,36,.30), transparent 27%),
-    linear-gradient(135deg,#fff8e6 0%,#ffffff 48%,#fff1f1 100%);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-}
-.login-screen:before{
-  content:"indosat";
-  position:absolute;
-  right:6%;
-  bottom:7%;
-  font-size:150px;
-  line-height:1;
-  font-weight:900;
-  letter-spacing:-10px;
-  color:rgba(237,28,36,.055);
-  pointer-events:none;
-}
-.login-card{
-  width:420px;
-  background:rgba(255,255,255,.96);
-  border:1px solid rgba(229,231,235,.95);
-  border-radius:28px;
-  padding:32px;
-  box-shadow:0 34px 90px rgba(15,23,42,.16);
-  position:relative;
-  overflow:hidden;
-}
-.login-card:after{
-  content:"";
-  position:absolute;
-  width:190px;
-  height:190px;
-  border-radius:50%;
-  right:-92px;
-  top:-92px;
-  background:linear-gradient(135deg,rgba(255,209,0,.35),rgba(237,28,36,.22));
-}
-.login-logo{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:18px;
-  position:relative;
-  z-index:1;
-}
-.login-logo .login-word{
-  font-size:40px;
-  font-weight:900;
-  letter-spacing:-2px;
-  color:#2b2b2b;
-  line-height:.9;
-}
-.login-logo .login-sub{
-  font-size:10px;
-  letter-spacing:2px;
-  color:#555;
-  font-weight:800;
-  margin-top:5px;
-}
-.login-divider{
-  height:1px;
-  background:linear-gradient(90deg,#ed1c24,#ffd100,transparent);
-  margin:10px 0 24px;
-}
-.login-card h2{
-  margin:0 0 22px;
-  font-size:26px;
-  letter-spacing:-.5px;
-  position:relative;
-  z-index:1;
-}
-.login-field{
-  margin-bottom:15px;
-  position:relative;
-  z-index:1;
-}
-.login-field label{
-  display:block;
-  font-size:13px;
-  font-weight:800;
-  margin-bottom:8px;
-  color:#111827;
-}
-.login-field input{
-  width:100%;
-  border:1px solid #e5e7eb;
-  border-radius:15px;
-  padding:14px 15px;
-  font-size:14px;
-  outline:none;
-  background:#fff;
-}
-.login-field input:focus{
-  border-color:#ed1c24;
-  box-shadow:0 0 0 4px rgba(237,28,36,.08);
-}
-.login-btn{
-  width:100%;
-  border:0;
-  border-radius:15px;
-  padding:15px;
-  background:#ed1c24;
-  color:white;
-  font-weight:900;
-  font-size:15px;
-  cursor:pointer;
-  margin-top:8px;
-  position:relative;
-  z-index:1;
-}
-.login-note{
-  margin-top:14px;
-  font-size:12px;
-  color:#6b7280;
-  text-align:center;
-  position:relative;
-  z-index:1;
-}
-.logout-btn{
-  border:1px solid #e5e7eb;
-  background:#fff;
-  color:#111827;
-  border-radius:12px;
-  padding:14px 16px;
-  font-weight:900;
-  cursor:pointer;
-}
-.icon-refresh{
-  width:48px;
-  height:48px;
-  border:0;
-  border-radius:50%;
-  background:#ed1c24;
-  color:#fff;
-  font-size:22px;
-  font-weight:900;
-  display:grid;
-  place-items:center;
-  cursor:pointer;
-  box-shadow:0 12px 26px rgba(237,28,36,.22);
-}
-.icon-refresh:hover{
-  transform:rotate(25deg);
-  transition:.2s ease;
-}
-
-
-.supabase-status{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  margin-left:10px;
-  padding:6px 10px;
-  border-radius:999px;
-  background:#dcfce7;
-  color:#166534;
-  font-size:12px;
-  font-weight:900;
-}
-.supabase-status.offline{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:linear-gradient(135deg,#fff8e6,#fff,#fff0f0);padding:20px;color:#111827}
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#fff8e6,#fff,#fff0f0);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-card{width:400px;background:#fff;padding:32px;border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.12)}
+.logo{font-size:42px;font-weight:900}.logo span{color:#ed1c24}
+.sub{font-size:11px;letter-spacing:2px;color:#666;margin-top:-5px;font-weight:700}
+.divider{height:1px;background:linear-gradient(90deg,#ed1c24,#ffd100,transparent);margin:18px 0 22px}
+.input{margin-bottom:15px}.input label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}
+.input input{width:100%;padding:14px;border-radius:14px;border:1px solid #ddd}
+.login-btn{width:100%;padding:15px;border:0;border-radius:15px;background:#ed1c24;color:#fff;font-weight:800;cursor:pointer}
+.note{text-align:center;font-size:12px;color:#777;margin-top:12px}
+.header{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:22px;border-radius:24px;box-shadow:0 10px 35px rgba(0,0,0,.05);margin-bottom:20px}
+.title h1{font-size:32px}.title p{margin-top:6px;color:#6b7280}
+.header-right{display:flex;gap:10px}
+.circle-btn{width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;font-size:20px;font-weight:800}
+.refresh{background:#ed1c24;color:#fff}.logout{background:#fff;border:1px solid #ddd}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.card{background:#fff;padding:22px;border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.05)}
+.kpi-title{font-size:13px;color:#6b7280;font-weight:700}
+.kpi-value{font-size:34px;font-weight:900;margin-top:8px}
+.layout{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-bottom:20px}
+.panel{background:#fff;padding:22px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.05)}
+.panel h3{margin-bottom:16px}
+.feed-item,.log-item{padding:14px;border-radius:14px;background:#fafafa;margin-bottom:10px;font-size:13px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:13px;font-size:13px;text-align:left}
+th{background:#fafafa;color:#6b7280}
+tr:nth-child(even){background:#fafafa}
+.badge{padding:6px 12px;border-radius:999px;font-size:11px;font-weight:800}
+.high{background:#fee2e2;color:#b91c1c}
+.medium{background:#fef3c7;color:#92400e}
+.normal{background:#dcfce7;color:#166534}
+.action-btn{padding:8px 12px;border:0;border-radius:12px;font-size:11px;font-weight:800;cursor:pointer}
+.block{background:#dc2626;color:#fff}.investigate{background:#f59e0b;color:#fff}.safe{background:#16a34a;color:#fff}
+.footer{text-align:center;color:#6b7280;font-size:12px;margin-top:16px}
+@media(max-width:1100px){.grid{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-
 <div class="login-screen" id="loginScreen">
-  <div class="login-card">
-    <div class="login-logo">
-      <div>
-        <div class="login-word">indosat</div>
-        <div class="login-sub">OOREDOO HUTCHISON</div>
-      </div>
-      <div class="logo-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-    </div>
-
-    <div class="login-divider"></div>
-
-    <h2>Dashboard Login</h2>
-
-    <div class="login-field">
-      <label>Username</label>
-      <input id="loginEmail" placeholder="Masukkan username" autocomplete="username" />
-    </div>
-
-    <div class="login-field">
-      <label>Password</label>
-      <input id="loginPassword" type="password" value="admin123" autocomplete="current-password" />
-    </div>
-
-    <button class="login-btn" onclick="loginDashboard()">Login</button>
-    <div class="login-note">Demo password: admin123</div>
-  </div>
+<div class="login-card">
+<div class="logo">indo<span>sat</span></div>
+<div class="sub">OOREDOO HUTCHISON</div>
+<div class="divider"></div>
+<h2 style="margin-bottom:22px">Dashboard Login</h2>
+<div class="input">
+<label>Username</label>
+<input id="username" placeholder="Masukkan username">
 </div>
-<div class="dashboard">
-  <header class="header">
-    <div class="brand">
-      <div class="logo"><div><div class="logo-word">indosat</div><div class="logo-sub">OOREDOO HUTCHISON</div></div><div class="logo-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
-      <div class="title"><h1>Indosat Ooredoo Dashboard</h1><p>Spam & Fraud Call Monitoring System <span class="supabase-status" id="supabaseStatus">● Supabase</span></p></div>
-    </div>
-    <div class="header-right"><div class="live-box"><span class="live-dot"></span><span class="live-text">LIVE</span><span class="time-label">Live Time</span><span class="time-value" id="liveTime">--:--:--</span><span class="date-value" id="liveDate">--</span></div><button class="icon-refresh" onclick="refreshDashboard()" title="Refresh Dashboard">⟳</button><button class="logout-btn" onclick="logoutDashboard()">Logout</button></div>
-  </header>
+<div class="input">
+<label>Password</label>
+<input id="password" type="password" value="admin123">
+</div>
+<button class="login-btn" onclick="login()">Login</button>
 
-  <section class="kpis">
-    <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-green">📞</div><div class="kpi-title">Total Calls</div></div><div class="kpi-value" id="kTotal"></div><div class="kpi-change up">+ 12.4% vs yesterday</div><svg class="spark" id="s1"></svg></div>
-    <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-red">⚠️</div><div class="kpi-title">Spam Calls</div></div><div class="kpi-value" id="kSpam"></div><div class="kpi-change down">+ 8.7% vs yesterday</div><svg class="spark" id="s2"></svg></div>
-    <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-green">%</div><div class="kpi-title">Spam Rate</div></div><div class="kpi-value" id="kRate"></div><div class="kpi-change up">+ 2.1% vs yesterday</div><svg class="spark" id="s3"></svg></div>
-    <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-blue">⏱</div><div class="kpi-title">Total Duration</div></div><div class="kpi-value" id="kDuration"></div><div class="kpi-change up">+ 10.3% vs yesterday</div><svg class="spark" id="s4"></svg></div>
-    <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-purple">👥</div><div class="kpi-title">Unique Numbers</div></div><div class="kpi-value" id="kUnique"></div><div class="kpi-change up">+ 9.8% vs yesterday</div><svg class="spark" id="s5"></svg></div>
-    <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-yellow">🛡</div><div class="kpi-title">Action Queue</div></div><div class="kpi-value" id="kAction"></div><div class="kpi-change down">Block / investigate</div><svg class="spark" id="s6"></svg></div>
-  </section>
+</div>
+</div>
 
-  <section class="main-grid">
-    <div class="card panel"><h3>Spam Calls Trend</h3><svg class="line-svg" id="trendChart" viewBox="0 0 560 250"></svg></div>
-    <div class="card panel"><h3>Spam Calls by Hour</h3><div id="hourChart" class="bar-chart"></div></div>
-    <div class="card panel"><h3>Number Risk Distribution</h3><div class="donut-wrap"><div class="donut"><div class="donut-inner"><div id="donutTotal"></div><small>Total Numbers</small></div></div><div class="legend" id="riskLegend"></div></div></div>
-  </section>
+<div class="header">
+<div class="title">
+<h1>Indosat Ooredoo Dashboard</h1>
+<p>Spam & Fraud Call Monitoring System</p>
+</div>
+<div class="header-right">
+<button class="circle-btn refresh" onclick="location.reload()">⟳</button>
+<button class="circle-btn logout" onclick="logout()">↩</button>
+</div>
+</div>
 
-  <section class="second-grid">
-    <div class="card panel"><h3>Spam Calls by Location</h3><div class="location-list" id="locationList"></div></div>
-    <div class="card panel"><h3>Spam Calls by Day</h3><div class="day-chart" id="dayChart"></div></div>
-    <div class="card panel"><h3>Live Activity Feed <span style="float:right;color:#ed1c24;font-size:12px">● LIVE</span></h3><table class="live-table"><thead><tr><th>Time</th><th>Number</th><th>Location</th><th>Status</th><th>Risk</th></tr></thead><tbody id="liveFeed"></tbody></table></div>
-  </section>
+<div class="grid">
+<div class="card"><div class="kpi-title">Total Call Records</div><div class="kpi-value">12,540</div></div>
+<div class="card"><div class="kpi-title">High Risk Numbers</div><div class="kpi-value">128</div></div>
+<div class="card"><div class="kpi-title">Blocked Numbers</div><div class="kpi-value" id="blockedCount">46</div></div>
+<div class="card"><div class="kpi-title">Spam Detection Rate</div><div class="kpi-value">91%</div></div>
+</div>
 
-  <section class="bottom-grid">
-    <div class="card panel"><h3>Number Risk Monitoring & Action</h3><table class="risk-table"><thead><tr><th>Rank</th><th>Phone Number</th><th>Location</th><th>Total Calls</th><th>Spam Calls</th><th>Spam Rate</th><th>Risk Score</th><th>Risk Level</th><th>Recommended Action</th><th>Company Action</th></tr></thead><tbody id="riskTable"></tbody></table></div>
-    <div class="card panel"><h3>Summary Insights</h3><div class="summary" id="summary"></div><h3 style="margin-top:15px">Action Log</h3><div class="action-log" id="actionLog"></div></div>
-  </section>
+<div class="layout">
+<div class="panel">
+<h3>Spam Call Trend</h3>
+<canvas id="chart"></canvas>
+</div>
+
+<div class="panel">
+<h3>Live Monitoring Feed</h3>
+<div class="feed-item">085812345678 melakukan 46 panggilan singkat dalam 1 jam</div>
+<div class="feed-item">Spam activity meningkat di wilayah Jakarta</div>
+<div class="feed-item">Nomor 085712349911 terindikasi fraud risk tinggi</div>
+<div class="feed-item">Monitoring mendeteksi pola panggilan berulang</div>
+<div class="feed-item">Temporary block direkomendasikan untuk nomor critical</div>
+</div>
+</div>
+
+<div class="layout">
+<div class="panel">
+<h3>High Risk Number Monitoring</h3>
+<table>
+<thead>
+<tr>
+<th>Number</th>
+<th>Location</th>
+<th>Risk</th>
+<th>Score</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="riskTable"></tbody>
+</table>
+</div>
+
+<div class="panel">
+<h3>Action Log</h3>
+<div id="actionLog"></div>
+</div>
+</div>
+
+<div class="footer">
+Indosat Ooredoo Hutchison • Business Intelligence Dashboard Prototype
 </div>
 
 <script>
+const riskData=[
+{number:'085812345678',location:'Jakarta',risk:'Critical',score:97},
+{number:'085712349911',location:'Bandung',risk:'High',score:89},
+{number:'085812998877',location:'Surabaya',risk:'High',score:84},
+{number:'085712334455',location:'Medan',risk:'Medium',score:58},
+{number:'085812300122',location:'Makassar',risk:'Normal',score:18},
+{number:'085712311100',location:'Batam',risk:'Normal',score:22}
+];
 
-const SUPABASE_URL = "https://berchuendpikicpqfusn.supabase.co";
-const SUPABASE_KEY = "sb_publishable_ba4nVkiFZIjj96bGTKTJcw_bMZLmmRS";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let logs=JSON.parse(localStorage.getItem('indosat_logs')||'[]');
 
-async function loadSupabaseData(){
-  const statusEl = document.getElementById('supabaseStatus');
-  try {
-    const riskResult = await supabaseClient
-      .from('risk_monitoring')
-      .select('*')
-      .order('risk_score', { ascending: false });
-
-    const callResult = await supabaseClient
-      .from('call_records')
-      .select('*');
-
-    if (riskResult.error) throw riskResult.error;
-    if (callResult.error) throw callResult.error;
-
-    if (riskResult.data && riskResult.data.length) {
-      DATA.risk = riskResult.data.slice(0, 14).map(row => ({
-        caller_number: row.caller_number,
-        location: row.location,
-        total_calls: Number(row.total_calls || 0),
-        spam_calls: Number(row.spam_calls || 0),
-        spam_rate: Number(row.spam_rate || 0),
-        avg_duration_min: Number(row.avg_duration_seconds || 0) / 60,
-        unique_receivers: Number(row.unique_receivers || 0),
-        risk_score: Number(row.risk_score || 0),
-        risk_level: row.risk_level,
-        recommended_action: row.recommended_action,
-        risk_reason: row.risk_reason
-      }));
-    }
-
-    if (callResult.data && callResult.data.length) {
-      const rows = callResult.data;
-      const totalCalls = rows.length;
-      const spamRows = rows.filter(r => String(r.is_spam_suspected).toLowerCase() === 'yes');
-      DATA.kpi.total_calls = totalCalls;
-      DATA.kpi.spam_calls = spamRows.length;
-      DATA.kpi.spam_rate = totalCalls ? Number((spamRows.length / totalCalls * 100).toFixed(2)) : 0;
-      DATA.kpi.total_duration = Math.round(rows.reduce((s,r)=>s+Number(r.duration_seconds||0),0)/60);
-      DATA.kpi.unique_numbers = new Set(rows.map(r=>r.caller_number)).size;
-      DATA.kpi.high_risk = DATA.risk.filter(r => ['Critical','High'].includes(r.risk_level)).length;
-      DATA.kpi.blocked_queue = DATA.risk.filter(r => r.risk_level === 'Critical').length;
-
-      const locMap = {};
-      rows.forEach(r => {
-        const p = r.province || 'Unknown';
-        if(!locMap[p]) locMap[p] = { province:p, total_calls:0, spam_calls:0 };
-        locMap[p].total_calls++;
-        if(String(r.is_spam_suspected).toLowerCase() === 'yes') locMap[p].spam_calls++;
-      });
-      const locs = Object.values(locMap).sort((a,b)=>b.spam_calls-a.spam_calls).slice(0,8);
-      const locTotal = locs.reduce((s,l)=>s+l.spam_calls,0) || 1;
-      DATA.locations = locs.map(l => ({
-        ...l,
-        spam_rate: Number((l.spam_calls/l.total_calls*100).toFixed(1)),
-        percent: Number((l.spam_calls/locTotal*100).toFixed(1))
-      }));
-    }
-
-    if(statusEl){
-      statusEl.textContent = '● Supabase Connected';
-      statusEl.classList.remove('offline');
-    }
-    renderAll();
-loadSupabaseData();
-subscribeSupabaseRealtime();
-  } catch (err) {
-    console.error('Supabase load error:', err);
-    if(statusEl){
-      statusEl.textContent = '● Supabase Offline';
-      statusEl.classList.add('offline');
-    }
-  }
+function login(){
+const u=document.getElementById('username').value.trim();
+const p=document.getElementById('password').value.trim();
+if(!u||!p){alert('Lengkapi login');return;}
+localStorage.setItem('indosat_login','1');
+document.getElementById('loginScreen').style.display='none';
 }
 
-function subscribeSupabaseRealtime(){
-  supabaseClient
-    .channel('indosat-dashboard-realtime')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'call_records' }, () => loadSupabaseData())
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'risk_monitoring' }, () => loadSupabaseData())
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'action_queue' }, () => loadSupabaseData())
-    .subscribe();
+window.onload=()=>{
+if(localStorage.getItem('indosat_login')==='1'){
+document.getElementById('loginScreen').style.display='none';
+}
+renderTable();
+renderLogs();
 }
 
-async function saveActionToSupabase(number, action){
-  const riskRow = DATA.risk.find(r => r.caller_number === number) || {};
-  const payload = {
-    action_id: 'ACT-' + Date.now(),
-    caller_number: number,
-    location: riskRow.location || '',
-    risk_level: riskRow.risk_level || '',
-    risk_score: Number(riskRow.risk_score || 0),
-    recommended_action: action,
-    action_status: action === 'Block' ? 'Blocked from dashboard' : action === 'Investigate' ? 'Under investigation' : 'Whitelisted'
-  };
-  const { error } = await supabaseClient.from('action_queue').insert(payload);
-  if(error) {
-    console.error('Failed saving action:', error);
-    alert('Action tersimpan di dashboard, tapi gagal masuk Supabase. Cek RLS/policy tabel action_queue.');
-  }
+function logout(){
+localStorage.removeItem('indosat_login');
+location.reload();
 }
 
-const DATA = {"kpi": {"total_calls": 1500, "spam_calls": 350, "spam_rate": 23.33, "total_duration": 8962, "unique_numbers": 461, "high_risk": 139, "critical": 56, "blocked_queue": 56}, "monthly": {"labels": ["Jan", "Feb", "Mar", "Apr"], "spam": [100, 96, 87, 67], "total": [441, 358, 378, 323]}, "hourly": {"labels": ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"], "values": [0, 0, 0, 0, 0, 0, 0, 0, 34, 41, 39, 39, 32, 0, 0, 0, 0, 0, 44, 51, 39, 31, 0, 0]}, "daily": {"labels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "values": [55, 44, 43, 57, 52, 51, 48]}, "status_counts": {"labels": ["Normal", "Low", "Medium", "High", "Critical"], "values": [101, 106, 115, 83, 56]}, "locations": [{"province": "Sumatera Utara", "total_calls": 201, "spam_calls": 100, "Avg_Duration_Seconds": 233.7, "Short_Calls": 83, "Unique_Callers": 43, "spam_rate": 49.8, "risk_index": 100, "risk_level": "Critical", "percent": 28.6}, {"province": "Jawa Tengah", "total_calls": 281, "spam_calls": 68, "Avg_Duration_Seconds": 354.9, "Short_Calls": 52, "Unique_Callers": 87, "spam_rate": 24.2, "risk_index": 61, "risk_level": "High", "percent": 19.4}, {"province": "DKI Jakarta", "total_calls": 188, "spam_calls": 54, "Avg_Duration_Seconds": 304.7, "Short_Calls": 43, "Unique_Callers": 56, "spam_rate": 28.7, "risk_index": 55, "risk_level": "High", "percent": 15.4}, {"province": "Bali", "total_calls": 194, "spam_calls": 46, "Avg_Duration_Seconds": 338.4, "Short_Calls": 35, "Unique_Callers": 59, "spam_rate": 23.7, "risk_index": 46, "risk_level": "Medium", "percent": 13.1}, {"province": "Jawa Barat", "total_calls": 164, "spam_calls": 29, "Avg_Duration_Seconds": 404.5, "Short_Calls": 20, "Unique_Callers": 55, "spam_rate": 17.7, "risk_index": 30, "risk_level": "Low", "percent": 8.3}, {"province": "Banten", "total_calls": 175, "spam_calls": 27, "Avg_Duration_Seconds": 408.5, "Short_Calls": 22, "Unique_Callers": 60, "spam_rate": 15.4, "risk_index": 28, "risk_level": "Low", "percent": 7.7}, {"province": "Jawa Timur", "total_calls": 164, "spam_calls": 26, "Avg_Duration_Seconds": 412.5, "Short_Calls": 17, "Unique_Callers": 51, "spam_rate": 15.9, "risk_index": 27, "risk_level": "Low", "percent": 7.4}, {"province": "DI Yogyakarta", "total_calls": 133, "spam_calls": 0, "Avg_Duration_Seconds": 470.9, "Short_Calls": 0, "Unique_Callers": 50, "spam_rate": 0.0, "risk_index": 0, "risk_level": "Low", "percent": 0.0}], "risk": [{"caller_number": "085718386620", "location": "Sumatera Utara", "total_calls": 21, "spam_calls": 18, "spam_rate": 85.7, "avg_duration_min": 1.45, "unique_receivers": 21, "risk_score": 81, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085843428810", "location": "Jawa Tengah", "total_calls": 23, "spam_calls": 22, "spam_rate": 95.7, "avg_duration_min": 0.47, "unique_receivers": 23, "risk_score": 81, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085729401825", "location": "Sumatera Utara", "total_calls": 18, "spam_calls": 16, "spam_rate": 88.9, "avg_duration_min": 1.38, "unique_receivers": 18, "risk_score": 80, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085829401825", "location": "Sumatera Utara", "total_calls": 21, "spam_calls": 19, "spam_rate": 90.5, "avg_duration_min": 0.88, "unique_receivers": 21, "risk_score": 79, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085889744427", "location": "Banten", "total_calls": 19, "spam_calls": 18, "spam_rate": 94.7, "avg_duration_min": 0.81, "unique_receivers": 19, "risk_score": 79, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085818386620", "location": "Sumatera Utara", "total_calls": 24, "spam_calls": 21, "spam_rate": 87.5, "avg_duration_min": 1.13, "unique_receivers": 24, "risk_score": 78, "risk_level": "Critical", "recommended_action": "Temporary Block", "risk_reason": "indikasi spam, frekuensi tinggi, durasi pendek, banyak target, missed/failed tinggi"}, {"caller_number": "085769899045", "location": "Jawa Tengah", "total_calls": 2, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 4.55, "unique_receivers": 2, "risk_score": 3, "risk_level": "Medium", "recommended_action": "Monitor", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085807895066", "location": "Jawa Tengah", "total_calls": 2, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 7.18, "unique_receivers": 2, "risk_score": 3, "risk_level": "Medium", "recommended_action": "Monitor", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085813958459", "location": "Bali", "total_calls": 5, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 6.61, "unique_receivers": 5, "risk_score": 3, "risk_level": "Medium", "recommended_action": "Monitor", "risk_reason": "perlu monitoring"}, {"caller_number": "085831110365", "location": "Banten", "total_calls": 6, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 8.04, "unique_receivers": 6, "risk_score": 3, "risk_level": "Medium", "recommended_action": "Monitor", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085806813038", "location": "Jawa Barat", "total_calls": 3, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 6.9, "unique_receivers": 3, "risk_score": 2, "risk_level": "Low", "recommended_action": "Low Monitoring", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085806846420", "location": "DI Yogyakarta", "total_calls": 4, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 7.75, "unique_receivers": 4, "risk_score": 2, "risk_level": "Low", "recommended_action": "Low Monitoring", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085801589181", "location": "Jawa Tengah", "total_calls": 2, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 5.72, "unique_receivers": 2, "risk_score": 2, "risk_level": "Low", "recommended_action": "Low Monitoring", "risk_reason": "missed/failed tinggi"}, {"caller_number": "085866764608", "location": "Jawa Timur", "total_calls": 4, "spam_calls": 0, "spam_rate": 0.0, "avg_duration_min": 8.3, "unique_receivers": 4, "risk_score": 2, "risk_level": "Low", "recommended_action": "Low Monitoring", "risk_reason": "missed/failed tinggi"}]};
-let feedOffset = 0;
-let actionLog = [];
+function renderTable(){
+const tbody=document.getElementById('riskTable');
+tbody.innerHTML='';
+riskData.forEach(item=>{
+let cls='normal';
+if(item.risk==='Critical'||item.risk==='High') cls='high';
+if(item.risk==='Medium') cls='medium';
 
-function fmt(n){return Number(n||0).toLocaleString('id-ID')}
-function updateClock(){const now=new Date();document.getElementById('liveTime').textContent=now.toLocaleTimeString('id-ID');document.getElementById('liveDate').textContent=now.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}
-function spark(id,color){const vals=Array.from({length:14},()=>Math.floor(Math.random()*22)+8);const max=Math.max(...vals);const pts=vals.map((v,i)=>`${i*17},${34-(v/max*26)}`).join(' ');document.getElementById(id).innerHTML=`<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2"/><polygon points="0,38 ${pts} 221,38" fill="${color}" opacity=".12"/>`}
-function renderKpi(){document.getElementById('kTotal').textContent=fmt(DATA.kpi.total_calls);document.getElementById('kSpam').textContent=fmt(DATA.kpi.spam_calls);document.getElementById('kRate').textContent=DATA.kpi.spam_rate+'%';document.getElementById('kDuration').textContent=fmt(DATA.kpi.total_duration)+' m';document.getElementById('kUnique').textContent=fmt(DATA.kpi.unique_numbers);document.getElementById('kAction').textContent=fmt(DATA.kpi.blocked_queue);['s1','s2','s3','s4','s5','s6'].forEach((id,i)=>spark(id,i==1||i==5?'#ed1c24':i==3?'#2f7df6':i==4?'#8b5cf6':'#21b573'))}
-function renderTrend(){const svg=document.getElementById('trendChart');const labels=DATA.monthly.labels;const spam=DATA.monthly.spam;const total=DATA.monthly.total;const w=560,h=250,p=38;const max=Math.max(...total,...spam,1);function points(vals){return vals.map((v,i)=>[p+i*((w-p*2)/Math.max(vals.length-1,1)),h-p-(v/max)*(h-p*2),v])}const ps=points(spam),pt=points(total);const lineS=ps.map(a=>a[0]+','+a[1]).join(' ');const lineT=pt.map(a=>a[0]+','+a[1]).join(' ');let grid='';for(let i=0;i<5;i++){let y=p+i*((h-p*2)/4);grid+=`<line x1="${p}" y1="${y}" x2="${w-p}" y2="${y}" stroke="#e5e7eb"/>`}svg.innerHTML=`${grid}<polyline points="${lineT}" fill="none" stroke="#94a3b8" stroke-width="3"/><polyline points="${lineS}" fill="none" stroke="#ed1c24" stroke-width="4"/><g>${ps.map((a,i)=>`<circle cx="${a[0]}" cy="${a[1]}" r="5" fill="#ed1c24"/><text x="${a[0]}" y="${h-8}" text-anchor="middle" font-size="11" fill="#4b5563">${labels[i]}</text>`).join('')}</g>`}
-function renderHour(){const vals=DATA.hourly.values;const labels=DATA.hourly.labels;const max=Math.max(...vals,1);document.getElementById('hourChart').innerHTML=vals.map((v,i)=>`<div class="bar-group"><div class="bar" title="${labels[i]} · ${v}" style="height:${Math.max(5,v/max*190)}px"></div><div class="bar-label">${i%3===0?labels[i].slice(0,2):''}</div></div>`).join('')}
-function renderRiskDonut(){document.getElementById('donutTotal').textContent=fmt(DATA.kpi.unique_numbers);const colors=['#21b573','#2f7df6','#fbbf24','#ff8a00','#ff3341'];const total=DATA.status_counts.values.reduce((a,b)=>a+b,0);document.getElementById('riskLegend').innerHTML=DATA.status_counts.labels.map((l,i)=>`<div class="legend-row"><span class="swatch" style="background:${colors[i]}"></span><span>${l}</span><b>${DATA.status_counts.values[i]} (${(DATA.status_counts.values[i]/total*100).toFixed(1)}%)</b></div>`).join('')}
-function renderLocations(){const max=Math.max(...DATA.locations.map(l=>l.spam_calls),1);document.getElementById('locationList').innerHTML=DATA.locations.map(l=>`<div class="location-row"><div class="loc-name"><span class="pin">⌖</span>${l.province}</div><div class="progress"><span style="width:${l.spam_calls/max*100}%"></span></div><b>${l.spam_calls}</b><span>${l.percent}%</span></div>`).join('')}
-function renderDay(){const vals=DATA.daily.values,labels=DATA.daily.labels,max=Math.max(...vals,1);document.getElementById('dayChart').innerHTML=vals.map((v,i)=>`<div class="day-col"><b style="font-size:11px;color:${v===max?'#ed1c24':'#111827'}">${v}</b><div class="day-bar" style="height:${Math.max(10,v/max*175)}px;${v===max?'background:#ff3341':''}"></div><div class="day-label">${labels[i]}</div></div>`).join('')}
-function actionClass(a){if(a.includes('Block'))return'action-red';if(a.includes('Investigate'))return'action-orange';if(a.includes('Monitor'))return'action-blue';return'action-green'}
-function renderTable(){document.getElementById('riskTable').innerHTML=DATA.risk.map((r,i)=>`<tr><td>${i+1}</td><td><b>${r.caller_number}</b></td><td>${r.location}</td><td>${r.total_calls}</td><td>${r.spam_calls}</td><td><b style="color:${r.spam_rate>50?'#ed1c24':'#16a34a'}">${r.spam_rate}%</b></td><td class="risk-score">${r.risk_score}</td><td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td><td class="${actionClass(r.recommended_action)}">🛡 ${r.recommended_action}</td><td><button class="action-btn btn-block" onclick="takeAction('${r.caller_number}','Block')">Block</button><button class="action-btn btn-investigate" onclick="takeAction('${r.caller_number}','Investigate')">Investigate</button><button class="action-btn btn-safe" onclick="takeAction('${r.caller_number}','Whitelist')">Whitelist</button></td></tr>`).join('')}
-function renderFeed(){const rows=[];for(let i=0;i<8;i++)rows.push(DATA.risk[(feedOffset+i)%DATA.risk.length]);document.getElementById('liveFeed').innerHTML=rows.map((r,i)=>`<tr><td>${new Date(Date.now()-i*12000).toLocaleTimeString('id-ID')}</td><td>${r.caller_number}</td><td>${r.location}</td><td>${r.spam_calls>0?'Spam Call':'Normal Call'}</td><td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td></tr>`).join('')}
-function renderSummary(){const peakLoc=DATA.locations[0];const maxHour=DATA.hourly.values.indexOf(Math.max(...DATA.hourly.values));document.getElementById('summary').innerHTML=`<div class="summary-item"><div class="summary-icon i-red">⚠️</div><div class="summary-text">Spam rate saat ini <b>${DATA.kpi.spam_rate}%</b>.</div></div><div class="summary-item"><div class="summary-icon i-blue">⏱</div><div class="summary-text">Puncak spam terjadi pada <b>${String(maxHour).padStart(2,'0')}:00 WIB</b>.</div></div><div class="summary-item"><div class="summary-icon i-purple">⌖</div><div class="summary-text">Lokasi spam tertinggi <b>${peakLoc.province}</b> (${peakLoc.spam_calls} spam calls).</div></div><div class="summary-item"><div class="summary-icon i-green">🛡</div><div class="summary-text"><b>${DATA.kpi.high_risk}</b> nomor masuk High & Critical Risk.</div></div>`}
-function renderActionLog(){document.getElementById('actionLog').innerHTML=actionLog.length?actionLog.map(l=>`<div class="log-item"><b>${l.action}</b> · ${l.number}<br><span>${l.time}</span></div>`).join(''):`<div class="log-item">Belum ada tindakan manual.</div>`}
-function takeAction(number, action){
-  const item = {
-    number,
-    action,
-    time: new Date().toLocaleString('id-ID')
-  };
-  actionLog.unshift(item);
-  if(typeof localStorage !== 'undefined'){
-    localStorage.setItem('indosat_action_log', JSON.stringify(actionLog));
-  }
-
-  DATA.risk = DATA.risk.map(r => {
-    if(r.caller_number === number){
-      r.manual_status = action;
-      if(action === 'Block'){
-        r.recommended_action = 'Blocked';
-      }else if(action === 'Investigate'){
-        r.recommended_action = 'Under Investigation';
-      }else if(action === 'Whitelist'){
-        r.recommended_action = 'Whitelisted';
-        r.risk_level = 'Normal';
-        r.risk_score = Math.min(r.risk_score, 20);
-      }
-    }
-    return r;
-  });
-
-  saveActionToSupabase(number, action);
-  if(typeof renderActionLog === 'function') renderActionLog();
-  renderTable();
-}
-
-function logoutDashboard(){
-  localStorage.removeItem('indosat_logged_in');
-  document.getElementById('loginScreen').style.display='flex';
-}
-
-window.addEventListener('load',()=>{
-  if(localStorage.getItem('indosat_logged_in')==='true'){
-    document.getElementById('loginScreen').style.display='none';
-  }
+tbody.innerHTML += `
+<tr>
+<td>${item.number}</td>
+<td>${item.location}</td>
+<td><span class="badge ${cls}">${item.risk}</span></td>
+<td>${item.score}</td>
+<td style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="action-btn block" onclick="takeAction('${item.number}','Block')">Block</button>
+<button class="action-btn investigate" onclick="takeAction('${item.number}','Investigate')">Investigate</button>
+<button class="action-btn safe" onclick="takeAction('${item.number}','Whitelist')">Whitelist</button>
+</td>
+</tr>`;
 });
+}
 
-function renderAll(){updateClock();renderKpi();renderTrend();renderHour();renderRiskDonut();renderLocations();renderDay();renderFeed();renderTable();renderSummary();renderActionLog()}
-setInterval(updateClock,1000);setInterval(()=>{feedOffset=(feedOffset+1)%DATA.risk.length;renderFeed()},4000);renderAll();
+function takeAction(number,action){
+logs.unshift({
+number:number,
+action:action,
+time:new Date().toLocaleString('id-ID')
+});
+localStorage.setItem('indosat_logs',JSON.stringify(logs));
+renderLogs();
+
+if(action==='Block'){
+let val=parseInt(document.getElementById('blockedCount').innerText);
+document.getElementById('blockedCount').innerText=val+1;
+}
+}
+
+function renderLogs(){
+const wrap=document.getElementById('actionLog');
+if(logs.length===0){
+wrap.innerHTML='<div class="log-item">Belum ada tindakan monitoring.</div>';
+return;
+}
+wrap.innerHTML='';
+logs.forEach(item=>{
+wrap.innerHTML += `
+<div class="log-item">
+<b>${item.action}</b> • ${item.number}<br>
+<span style="color:#6b7280">${item.time}</span>
+</div>`;
+});
+}
+
+new Chart(document.getElementById('chart'),{
+type:'line',
+data:{
+labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+datasets:[{
+data:[120,180,140,260,220,300,280],
+borderColor:'#ed1c24',
+backgroundColor:'rgba(237,28,36,.1)',
+fill:true,
+tension:.4
+}]
+},
+options:{plugins:{legend:{display:false}}}
+});
 </script>
+
 </body>
 </html>
