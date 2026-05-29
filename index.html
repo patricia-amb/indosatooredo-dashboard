@@ -259,6 +259,32 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   white-space:nowrap;
 }
 
+
+.password-wrap{
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+.password-wrap input{
+  padding-right:48px !important;
+}
+.password-toggle{
+  position:absolute;
+  right:10px;
+  width:34px;
+  height:34px;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  font-size:17px;
+  display:grid;
+  place-items:center;
+  opacity:.75;
+}
+.password-toggle:hover{
+  opacity:1;
+}
+
 </style>
 </head>
 <body>
@@ -285,7 +311,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
 
     <div class="login-field">
       <label>Password</label>
-      <input id="loginPassword" type="password" value="admin123" autocomplete="current-password" />
+      <div class="password-wrap"><input id="loginPassword" type="password" value="admin123" autocomplete="current-password" /><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Show password">👁</button></div>
     </div>
 
     <button class="login-btn" onclick="loginDashboard()">Login</button>
@@ -319,7 +345,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   <section class="second-grid">
     <div class="card panel"><h3>Spam Calls by Location</h3><div class="location-list" id="locationList"></div></div>
     <div class="card panel"><h3>Spam Calls by Day</h3><div class="day-chart" id="dayChart"></div></div>
-    <div class="card panel"><h3>Live Activity Feed <span style="float:right;color:#ed1c24;font-size:12px">● LIVE</span></h3><table class="live-table"><thead><tr><th>Time</th><th>Number</th><th>Location</th><th>Status</th><th>Activity Detection</th></tr></thead><tbody id="liveFeed"></tbody></table></div>
+    <div class="card panel"><h3>Live Activity Feed <span style="float:right;color:#ed1c24;font-size:12px">● LIVE</span></h3><table class="live-table"><thead><tr><th>Time</th><th>Number</th><th>Location</th><th>Activity Detection</th></tr></thead><tbody id="liveFeed"></tbody></table></div>
   </section>
 
   <section class="bottom-grid">
@@ -351,13 +377,14 @@ function renderFeed(){
     'Missed Call Spike',
     'Outbound Burst',
     'Unusual Night Activity',
-    'Spam Suspected',
     'High Call Frequency',
-    'Short Duration Pattern'
+    'Short Duration Pattern',
+    'Repeated Receiver Pattern'
   ];
 
   const source = DATA.risk && DATA.risk.length ? DATA.risk : [];
   const rows = [];
+
   for(let i=0;i<8 && source.length;i++){
     const r = source[(feedOffset+i)%source.length];
     const activity = activityTypes[(feedOffset+i)%activityTypes.length];
@@ -369,7 +396,6 @@ function renderFeed(){
       <td>${new Date(Date.now()-i*12000).toLocaleTimeString('id-ID')}</td>
       <td>${r.caller_number}</td>
       <td>${r.location}</td>
-      <td>${r.spam_calls>0?'Spam Call':'Normal Call'}</td>
       <td><span class="activity-pill">${r.activity}</span></td>
     </tr>`).join('')
 }
@@ -389,6 +415,20 @@ function takeAction(number, action){
 }
 function refreshDashboard(){feedOffset=(feedOffset+1)%DATA.risk.length;DATA.risk.forEach((r,idx)=>{if(idx%4===feedOffset%4){r.risk_score=Math.max(0,Math.min(100,r.risk_score+(Math.random()>.5?1:-1)))}});renderFeed();renderTable();renderKpi()}
 
+
+function togglePassword(){
+  const input = document.getElementById('loginPassword') || document.getElementById('password');
+  const btn = document.querySelector('.password-toggle');
+  if(!input) return;
+  if(input.type === 'password'){
+    input.type = 'text';
+    if(btn) btn.textContent = '🙈';
+  }else{
+    input.type = 'password';
+    if(btn) btn.textContent = '👁';
+  }
+}
+
 function loginDashboard(){
   const username = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPassword').value.trim();
@@ -397,20 +437,15 @@ function loginDashboard(){
     return;
   }
   document.getElementById('loginScreen').style.display='none';
-  localStorage.setItem('indosat_logged_in','true');
+  
   localStorage.setItem('indosat_username', username);
 }
 
 function logoutDashboard(){
-  localStorage.removeItem('indosat_logged_in');
   document.getElementById('loginScreen').style.display='flex';
 }
 
-window.addEventListener('load',()=>{
-  if(localStorage.getItem('indosat_logged_in')==='true'){
-    document.getElementById('loginScreen').style.display='none';
-  }
-});
+
 
 function renderAll(){updateClock();renderKpi();renderTrend();renderHour();renderRiskDonut();renderLocations();renderDay();renderFeed();renderTable();renderActionLog()}
 setInterval(updateClock,1000);setInterval(()=>{feedOffset=(feedOffset+1)%DATA.risk.length;renderFeed()},4000);renderAll();
