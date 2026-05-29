@@ -485,7 +485,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
 }
 
 
-
 .password-wrap{
   position:relative;
   width:100%;
@@ -526,7 +525,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   width:18px;
   height:18px;
   fill:#374151;
-  opacity:.78;
+  opacity:.8;
 }
 .password-toggle:hover svg{
   opacity:1;
@@ -558,11 +557,11 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
 
     <div class="login-field">
       <label>Password</label>
-      <div class="password-wrap"><div class="password-wrap"><div class="password-wrap"><input id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password"><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><svg id="eyeIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5C6.5 5 2.2 9.4 1 12c1.2 2.6 5.5 7 11 7s9.8-4.4 11-7c-1.2-2.6-5.5-7-11-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2.2a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6Z"/></svg></button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><span id="eyeIcon">👁</span></button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password">👁</button></div>
+      <div class="password-wrap"><div class="password-wrap"><input id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password"><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><svg viewBox="0 0 24 24"><path d="M12 5C6.5 5 2.2 9.4 1 12c1.2 2.6 5.5 7 11 7s9.8-4.4 11-7c-1.2-2.6-5.5-7-11-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2.2a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6Z"/></svg></button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><svg viewBox="0 0 24 24"><path d="M12 5C6.5 5 2.2 9.4 1 12c1.2 2.6 5.5 7 11 7s9.8-4.4 11-7c-1.2-2.6-5.5-7-11-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2.2a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6Z"/></svg></button></div>
     </div>
 
     <button class="login-btn" onclick="loginDashboard()">Login</button>
-    <div class="login-note">Password demo: admin123</div>
+    <div class="login-note">Demo password: admin123</div>
   </div>
 </div>
 <div class="dashboard">
@@ -616,31 +615,34 @@ function renderRiskDonut(){document.getElementById('donutTotal').textContent=fmt
 function renderLocations(){const max=Math.max(...DATA.locations.map(l=>l.spam_calls),1);document.getElementById('locationList').innerHTML=DATA.locations.map(l=>`<div class="location-row"><div class="loc-name"><span class="pin">⌖</span>${l.province}</div><div class="progress"><span style="width:${l.spam_calls/max*100}%"></span></div><b>${l.spam_calls}</b><span>${l.percent}%</span></div>`).join('')}
 function renderDay(){const vals=DATA.daily.values,labels=DATA.daily.labels,max=Math.max(...vals,1);document.getElementById('dayChart').innerHTML=vals.map((v,i)=>`<div class="day-col"><b style="font-size:11px;color:${v===max?'#ed1c24':'#111827'}">${v}</b><div class="day-bar" style="height:${Math.max(10,v/max*175)}px;${v===max?'background:#ff3341':''}"></div><div class="day-label">${labels[i]}</div></div>`).join('')}
 function actionClass(a){if(a.includes('Block'))return'action-red';if(a.includes('Investigate'))return'action-orange';if(a.includes('Monitor'))return'action-blue';return'action-green'}
-function renderTable(){
-  const sorted = [...DATA.risk].sort((a,b)=>b.risk_score-a.risk_score);
-  const selected = [
-    ...sorted.filter(r=>r.risk_level === 'Critical').slice(0,2),
-    ...sorted.filter(r=>r.risk_level === 'High').slice(0,4),
-    ...sorted.filter(r=>r.risk_level === 'Medium').slice(0,4),
-    ...sorted.filter(r=>r.risk_level === 'Low' || r.risk_level === 'Normal').slice(0,4)
-  ].slice(0,14);
+function renderTable(){document.getElementById('riskTable').innerHTML=DATA.risk.map((r,i)=>`<tr><td>${i+1}</td><td><b>${r.caller_number}</b></td><td>${r.location}</td><td>${r.total_calls}</td><td>${r.spam_calls}</td><td><b style="color:${r.spam_rate>50?'#ed1c24':'#16a34a'}">${r.spam_rate}%</b></td><td class="risk-score">${r.risk_score}</td><td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td><td class="${actionClass(r.recommended_action)}">🛡 ${r.recommended_action}</td><td><button class="action-btn btn-block" onclick="takeAction('${r.caller_number}','Block')">Block</button><button class="action-btn btn-investigate" onclick="takeAction('${r.caller_number}','Investigate')">Investigate</button><button class="action-btn btn-safe" onclick="takeAction('${r.caller_number}','Whitelist')">Whitelist</button></td></tr>`).join('')}
+function renderFeed(){
+  const activityTypes = [
+    'Repeated Short Calls',
+    'Multiple Receivers',
+    'Missed Call Spike',
+    'Outbound Burst',
+    'Unusual Night Activity',
+    'High Call Frequency',
+    'Short Duration Pattern',
+    'Repeated Receiver Pattern'
+  ];
 
-  document.getElementById('riskTable').innerHTML=selected.map((r,i)=>`
+  const source = DATA.risk && DATA.risk.length ? DATA.risk : [];
+  const rows = [];
+
+  for(let i=0;i<8 && source.length;i++){
+    const r = source[(feedOffset+i)%source.length];
+    const activity = activityTypes[(feedOffset+i)%activityTypes.length];
+    rows.push({ ...r, activity });
+  }
+
+  document.getElementById('liveFeed').innerHTML = rows.map((r,i)=>`
     <tr>
-      <td>${i+1}</td>
-      <td><b>${r.caller_number}</b></td>
+      <td>${new Date(Date.now()-i*12000).toLocaleTimeString('id-ID')}</td>
+      <td>${r.caller_number}</td>
       <td>${r.location}</td>
-      <td>${r.total_calls}</td>
-      <td>${r.spam_calls}</td>
-      <td><b style="color:${r.spam_rate>50?'#ed1c24':'#16a34a'}">${r.spam_rate}%</b></td>
-      <td class="risk-score">${r.risk_score}</td>
-      <td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td>
-      <td class="${actionClass(r.recommended_action)}">🛡 ${r.recommended_action}</td>
-      <td>
-        <button class="action-btn btn-block" onclick="takeAction('${r.caller_number}','Block')">Block</button>
-        <button class="action-btn btn-investigate" onclick="takeAction('${r.caller_number}','Investigate')">Investigate</button>
-        <button class="action-btn btn-safe" onclick="takeAction('${r.caller_number}','Whitelist')">Whitelist</button>
-      </td>
+      <td><span class="activity-pill">${r.activity}</span></td>
     </tr>`).join('')
 }
 function renderActionLog(){
@@ -657,46 +659,54 @@ function takeAction(number, action){
   localStorage.setItem('indosat_action_log', JSON.stringify(actionLog));
   renderActionLog();
 }
-function refreshDashboard(){
-  feedOffset=(feedOffset+1)%DATA.risk.length;
+function refreshDashboard(){feedOffset=(feedOffset+1)%DATA.risk.length;DATA.risk.forEach((r,idx)=>{if(idx%4===feedOffset%4){r.risk_score=Math.max(0,Math.min(100,r.risk_score+(Math.random()>.5?1:-1)))}});renderFeed();renderTable();renderKpi()}
 
-  DATA.risk.forEach((r,idx)=>{
-    if(idx%3===feedOffset%3){
-      const delta = Math.floor(Math.random()*9)-4;
-      r.risk_score = Math.max(5,Math.min(98,r.risk_score + delta));
 
-      if(r.risk_score >= 85){
-        r.risk_level = 'Critical';
-        r.recommended_action = 'Temporary Block';
-      }else if(r.risk_score >= 70){
-        r.risk_level = 'High';
-        r.recommended_action = 'Investigate';
-      }else if(r.risk_score >= 45){
-        r.risk_level = 'Medium';
-        r.recommended_action = 'Monitor';
-      }else{
-        r.risk_level = 'Normal';
-        r.recommended_action = 'No Action';
-      }
-    }
-  });
 
-  renderFeed();
-  renderTable();
-  renderKpi();
+function togglePassword(){
+  const input = document.getElementById('loginPassword') || document.getElementById('password');
+  if(!input) return;
+  input.type = input.type === 'password' ? 'text' : 'password';
 }
+
+
+function loginDashboard(){
+  const usernameInput = document.getElementById('loginEmail') || document.getElementById('username');
+  const passwordInput = document.getElementById('loginPassword') || document.getElementById('password');
+  const username = usernameInput ? usernameInput.value.trim() : '';
+  const pass = passwordInput ? passwordInput.value.trim() : '';
+
+  if(!username || !pass){
+    alert('Username dan password wajib diisi.');
+    return;
+  }
+
+  if(pass !== 'admin123'){
+    alert('Password salah. Gunakan password demo: admin123');
+    return;
+  }
+
+  const screen = document.getElementById('loginScreen');
+  if(screen) screen.style.display = 'none';
+}
+
+function logoutDashboard(){
+  document.getElementById('loginScreen').style.display='flex';
+}
+
+
+
+
 function getReportRows(){
   if(typeof DATA !== 'undefined' && DATA.risk){
-    return [...DATA.risk].sort((a,b)=>b.risk_score-a.risk_score).slice(0, 12).map((r, idx)=>({
+    return DATA.risk.slice(0, 8).map((r, idx)=>({
       rank: idx + 1,
       number: r.caller_number,
       location: r.location,
       risk: r.risk_level,
       score: r.risk_score,
       action: r.recommended_action || 'Monitor',
-      total_calls: r.total_calls || '-',
-      spam_calls: r.spam_calls || '-',
-      spam_rate: r.spam_rate || '-'
+      reason: r.risk_reason || 'Risk pattern detected'
     }));
   }
   return [];
@@ -726,7 +736,7 @@ function openReport(){
   const rows = getReportRows();
   const k = getReportKpi();
   const actionLogRaw = localStorage.getItem('indosat_action_log');
-  let actionLog = [];
+  let actionLog = JSON.parse(localStorage.getItem('indosat_action_log') || '[]');
   try{ actionLog = actionLogRaw ? JSON.parse(actionLogRaw) : []; }catch(e){ actionLog = []; }
 
   const reportNo = 'IOH-FMR-' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + String(now.getHours()).padStart(2,'0') + String(now.getMinutes()).padStart(2,'0');
@@ -741,33 +751,36 @@ function openReport(){
         <b>Report No:</b> ${reportNo}<br>
         <b>Generated:</b> ${now.toLocaleString('id-ID')}<br>
         <b>Department:</b> Fraud Monitoring & Network Security<br>
-        <b>Classification:</b> Internal Monitoring Report
+        <b>Classification:</b> Internal Use
       </div>
     </div>
 
     <div class="report-title">
-      <h1>Fraud Call Monitoring Action Report</h1>
-      <p>Laporan ini berisi daftar nomor yang masuk dalam monitoring risiko serta riwayat tindakan yang telah dilakukan melalui dashboard.</p>
-    </div>
-
-    <div class="report-kpis">
-      <div class="report-kpi"><small>Total Call Records</small><b>${Number(k.totalCalls).toLocaleString('id-ID')}</b></div>
-      <div class="report-kpi"><small>Spam Calls</small><b>${Number(k.spamCalls).toLocaleString('id-ID')}</b></div>
-      <div class="report-kpi"><small>Spam Rate</small><b>${k.spamRate}</b></div>
-      <div class="report-kpi"><small>High Risk Numbers</small><b>${Number(k.highRisk).toLocaleString('id-ID')}</b></div>
+      <h1>Spam & Fraud Call Monitoring Investigation Report</h1>
+      <p>Laporan ini disusun sebagai hasil monitoring aktivitas panggilan berisiko, identifikasi nomor dengan pola komunikasi tidak normal, serta rekomendasi tindakan untuk tim fraud, network security, dan customer protection.</p>
     </div>
 
     <div class="report-section">
-      <h2>1. Number Risk Monitoring List</h2>
+      <h2>1. Executive Summary</h2>
+      <p style="font-size:13px;line-height:1.65;color:#374151">
+        Dashboard monitoring mendeteksi aktivitas panggilan yang berpotensi mengarah pada spam/fraud call berdasarkan kombinasi indikator seperti frekuensi panggilan, durasi pendek berulang, banyak receiver unik, failed/missed call, serta pola aktivitas tidak wajar. Laporan ini digunakan sebagai dasar eskalasi tindakan lintas departemen.
+      </p>
+      <div class="report-kpis">
+        <div class="report-kpi"><small>Total Call Records</small><b>${Number(k.totalCalls).toLocaleString('id-ID')}</b></div>
+        <div class="report-kpi"><small>Spam Calls</small><b>${Number(k.spamCalls).toLocaleString('id-ID')}</b></div>
+        <div class="report-kpi"><small>Spam Rate</small><b>${k.spamRate}</b></div>
+        <div class="report-kpi"><small>High Risk Numbers</small><b>${Number(k.highRisk).toLocaleString('id-ID')}</b></div>
+      </div>
+    </div>
+
+    <div class="report-section">
+      <h2>2. High Risk Number Findings</h2>
       <table class="report-table">
         <thead>
           <tr>
             <th>Rank</th>
             <th>Phone Number</th>
             <th>Location</th>
-            <th>Total Calls</th>
-            <th>Spam Calls</th>
-            <th>Spam Rate</th>
             <th>Risk Level</th>
             <th>Risk Score</th>
             <th>Recommended Action</th>
@@ -779,9 +792,6 @@ function openReport(){
               <td>${r.rank}</td>
               <td><b>${r.number}</b></td>
               <td>${r.location}</td>
-              <td>${r.total_calls}</td>
-              <td>${r.spam_calls}</td>
-              <td>${r.spam_rate}%</td>
               <td><span class="report-badge ${reportBadgeClass(r.risk)}">${r.risk}</span></td>
               <td>${r.score}</td>
               <td>${r.action}</td>
@@ -792,7 +802,7 @@ function openReport(){
     </div>
 
     <div class="report-section">
-      <h2>2. Company Action Log</h2>
+      <h2>3. Company Action Log</h2>
       <table class="report-table">
         <thead>
           <tr>
@@ -800,34 +810,42 @@ function openReport(){
             <th>Phone Number</th>
             <th>Action</th>
             <th>Action Time</th>
-            <th>Forwarded To</th>
           </tr>
         </thead>
         <tbody>
           ${
             actionLog.length
-            ? actionLog.slice(0,12).map((a,i)=>`
+            ? actionLog.slice(0,10).map((a,i)=>`
               <tr>
                 <td>${i+1}</td>
                 <td><b>${a.number}</b></td>
                 <td>${a.action}</td>
                 <td>${a.time}</td>
-                <td>${a.action === 'Block' ? 'Network Security Team' : a.action === 'Investigate' ? 'Fraud Investigation Team' : 'Customer Protection Team'}</td>
               </tr>`).join('')
-            : `<tr><td colspan="5">Belum ada tindakan manual yang tercatat pada dashboard.</td></tr>`
+            : `<tr><td colspan="4">Belum ada tindakan manual yang tercatat pada dashboard.</td></tr>`
           }
         </tbody>
       </table>
     </div>
 
     <div class="report-section">
-      <h2>3. Department Follow-up</h2>
+      <h2>4. Recommended Follow-up Actions</h2>
+      <div class="recommendation-list">
+        <div class="recommendation-item"><b>Temporary Block:</b> Nomor dengan kategori Critical dan risk score sangat tinggi direkomendasikan untuk pemblokiran sementara setelah validasi fraud team.</div>
+        <div class="recommendation-item"><b>Investigation Queue:</b> Nomor dengan kategori High perlu dianalisis lanjutan berdasarkan riwayat panggilan, lokasi, spam pattern, dan receiver distribution.</div>
+        <div class="recommendation-item"><b>Monitoring:</b> Nomor Medium tetap dipantau secara berkala dan akan dieskalasi apabila terjadi peningkatan aktivitas mencurigakan.</div>
+        <div class="recommendation-item"><b>Whitelist Review:</b> Nomor yang terbukti merupakan aktivitas resmi perusahaan/call center perlu masuk whitelist agar tidak terjadi false positive.</div>
+      </div>
+    </div>
+
+    <div class="report-section">
+      <h2>5. Department Routing</h2>
       <table class="report-table">
-        <thead><tr><th>Department</th><th>Follow-up Responsibility</th></tr></thead>
+        <thead><tr><th>Department</th><th>Responsibility</th><th>Output</th></tr></thead>
         <tbody>
-          <tr><td>Fraud Monitoring</td><td>Melakukan validasi atas nomor yang masuk daftar risk monitoring.</td></tr>
-          <tr><td>Network Security</td><td>Menindaklanjuti rekomendasi temporary block pada nomor kategori Critical.</td></tr>
-          <tr><td>Customer Protection</td><td>Meninjau nomor whitelist dan mengurangi risiko false positive.</td></tr>
+          <tr><td>Fraud Monitoring</td><td>Validasi pola spam/fraud dan risk score</td><td>Investigation recommendation</td></tr>
+          <tr><td>Network Security</td><td>Eksekusi temporary block atau network-level restriction</td><td>Blocking status update</td></tr>
+          <tr><td>Customer Protection</td><td>Perlindungan pelanggan dan edukasi risiko panggilan</td><td>Customer warning / notification</td></tr>
         </tbody>
       </table>
     </div>
@@ -844,7 +862,7 @@ function openReport(){
     </div>
 
     <div class="report-footer">
-      Indosat Ooredoo Hutchison · Fraud Call Monitoring Action Report · Internal Business Intelligence Prototype
+      Indosat Ooredoo Hutchison · Spam & Fraud Call Monitoring Report · Internal Business Intelligence Prototype
     </div>
   `;
 
@@ -859,54 +877,8 @@ function printReport(){
   window.print();
 }
 
-
 function renderAll(){updateClock();renderKpi();renderTrend();renderHour();renderRiskDonut();renderLocations();renderDay();renderFeed();renderTable();renderActionLog()}
 setInterval(updateClock,1000);setInterval(()=>{feedOffset=(feedOffset+1)%DATA.risk.length;renderFeed()},4000);renderAll();
-
-function togglePassword(){
-  const input = document.getElementById('loginPassword') || document.getElementById('password');
-  if(!input) return;
-  input.type = input.type === 'password' ? 'text' : 'password';
-}
-
-function login(){
-  const usernameInput = document.getElementById('loginEmail') || document.getElementById('username');
-  const passwordInput = document.getElementById('loginPassword') || document.getElementById('password');
-  const username = usernameInput ? usernameInput.value.trim() : '';
-  const pass = passwordInput ? passwordInput.value.trim() : '';
-
-  if(!username || !pass){
-    alert('Username dan password wajib diisi.');
-    return;
-  }
-
-  if(pass !== 'admin123'){
-    alert('Password salah. Gunakan password demo: admin123');
-    return;
-  }
-
-  document.getElementById('loginScreen').style.display='none';
-}
-function loginDashboard(){
-  const usernameInput = document.getElementById('loginEmail') || document.getElementById('username');
-  const passwordInput = document.getElementById('loginPassword') || document.getElementById('password');
-  const username = usernameInput ? usernameInput.value.trim() : '';
-  const pass = passwordInput ? passwordInput.value.trim() : '';
-
-  if(!username || !pass){
-    alert('Username dan password wajib diisi.');
-    return;
-  }
-
-  if(pass !== 'admin123'){
-    alert('Password salah. Gunakan password demo: admin123');
-    return;
-  }
-
-  const screen = document.getElementById('loginScreen');
-  if(screen) screen.style.display = 'none';
-}
-
 </script>
 
 <div class="report-modal" id="reportModal">
