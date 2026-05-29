@@ -536,11 +536,11 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
 
     <div class="login-field">
       <label>Password</label>
-      <div class="password-wrap"><input id="loginPassword" type="password" value="admin123" autocomplete="current-password" /><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Show password">👁</button></div>
+      <div class="password-wrap"><div class="password-wrap"><input id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password" /><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password">👁</button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password">👁</button></div>
     </div>
 
     <button class="login-btn" onclick="loginDashboard()">Login</button>
-    <div class="login-note">Demo password: admin123</div>
+    <div class="login-note">Password demo: admin123</div>
   </div>
 </div>
 <div class="dashboard">
@@ -840,6 +840,38 @@ function printReport(){
 
 function renderAll(){updateClock();renderKpi();renderTrend();renderHour();renderRiskDonut();renderLocations();renderDay();renderFeed();renderTable();renderActionLog()}
 setInterval(updateClock,1000);setInterval(()=>{feedOffset=(feedOffset+1)%DATA.risk.length;renderFeed()},4000);renderAll();
+
+function togglePassword(){
+  const input = document.getElementById('loginPassword') || document.getElementById('password');
+  const btn = document.querySelector('.password-toggle');
+  if(!input) return;
+  if(input.type === 'password'){
+    input.type = 'text';
+    if(btn) btn.textContent = '🙈';
+  }else{
+    input.type = 'password';
+    if(btn) btn.textContent = '👁';
+  }
+}
+
+function login(){
+  const usernameInput = document.getElementById('loginEmail') || document.getElementById('username');
+  const passwordInput = document.getElementById('loginPassword') || document.getElementById('password');
+  const username = usernameInput ? usernameInput.value.trim() : '';
+  const pass = passwordInput ? passwordInput.value.trim() : '';
+
+  if(!username || !pass){
+    alert('Username dan password wajib diisi.');
+    return;
+  }
+
+  if(pass !== 'admin123'){
+    alert('Password salah. Gunakan password demo: admin123');
+    return;
+  }
+
+  document.getElementById('loginScreen').style.display='none';
+}
 </script>
 
 <div class="report-modal" id="reportModal">
