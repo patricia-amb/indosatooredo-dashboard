@@ -260,32 +260,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
 }
 
 
-.password-wrap{
-  position:relative;
-  display:flex;
-  align-items:center;
-}
-.password-wrap input{
-  padding-right:48px !important;
-}
-.password-toggle{
-  position:absolute;
-  right:10px;
-  width:34px;
-  height:34px;
-  border:0;
-  background:transparent;
-  cursor:pointer;
-  font-size:17px;
-  display:grid;
-  place-items:center;
-  opacity:.75;
-}
-.password-toggle:hover{
-  opacity:1;
-}
-
-
 .report-btn{
   border:0;
   background:#111827;
@@ -510,6 +484,46 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   }
 }
 
+
+.password-wrap{
+  position:relative;
+  width:100%;
+}
+.password-wrap input{
+  width:100% !important;
+  height:auto;
+  padding:14px 48px 14px 15px !important;
+  border:1px solid #e5e7eb;
+  border-radius:15px;
+  font-size:14px;
+  outline:none;
+  background:#fff;
+}
+.password-wrap input:focus{
+  border-color:#ed1c24;
+  box-shadow:0 0 0 4px rgba(237,28,36,.08);
+}
+.password-toggle{
+  position:absolute;
+  top:50%;
+  right:12px;
+  transform:translateY(-50%);
+  width:32px;
+  height:32px;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  color:#6b7280;
+  padding:0;
+}
+.password-toggle:hover{
+  color:#111827;
+}
+
 </style>
 </head>
 <body>
@@ -536,7 +550,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
 
     <div class="login-field">
       <label>Password</label>
-      <div class="password-wrap"><div class="password-wrap"><input id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password" /><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password">👁</button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password">👁</button></div>
+      <div class="password-wrap"><div class="password-wrap"><div class="password-wrap"><input id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password"><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><span id="eyeIcon">👁</span></button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><span id="eyeIcon">👁</span></button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password">👁</button></div>
     </div>
 
     <button class="login-btn" onclick="loginDashboard()">Login</button>
@@ -843,17 +857,16 @@ setInterval(updateClock,1000);setInterval(()=>{feedOffset=(feedOffset+1)%DATA.ri
 
 function togglePassword(){
   const input = document.getElementById('loginPassword') || document.getElementById('password');
-  const btn = document.querySelector('.password-toggle');
+  const icon = document.getElementById('eyeIcon');
   if(!input) return;
   if(input.type === 'password'){
     input.type = 'text';
-    if(btn) btn.textContent = '🙈';
+    if(icon) icon.textContent = '◉';
   }else{
     input.type = 'password';
-    if(btn) btn.textContent = '👁';
+    if(icon) icon.textContent = '👁';
   }
 }
-
 function login(){
   const usernameInput = document.getElementById('loginEmail') || document.getElementById('username');
   const passwordInput = document.getElementById('loginPassword') || document.getElementById('password');
@@ -872,6 +885,26 @@ function login(){
 
   document.getElementById('loginScreen').style.display='none';
 }
+function loginDashboard(){
+  const usernameInput = document.getElementById('loginEmail') || document.getElementById('username');
+  const passwordInput = document.getElementById('loginPassword') || document.getElementById('password');
+  const username = usernameInput ? usernameInput.value.trim() : '';
+  const pass = passwordInput ? passwordInput.value.trim() : '';
+
+  if(!username || !pass){
+    alert('Username dan password wajib diisi.');
+    return;
+  }
+
+  if(pass !== 'admin123'){
+    alert('Password salah. Gunakan password demo: admin123');
+    return;
+  }
+
+  const screen = document.getElementById('loginScreen');
+  if(screen) screen.style.display = 'none';
+}
+
 </script>
 
 <div class="report-modal" id="reportModal">
