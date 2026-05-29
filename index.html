@@ -557,11 +557,18 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
 
     <div class="login-field">
       <label>Password</label>
-      <div class="password-wrap"><div class="password-wrap"><input id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password"><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><svg viewBox="0 0 24 24"><path d="M12 5C6.5 5 2.2 9.4 1 12c1.2 2.6 5.5 7 11 7s9.8-4.4 11-7c-1.2-2.6-5.5-7-11-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2.2a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6Z"/></svg></button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><svg viewBox="0 0 24 24"><path d="M12 5C6.5 5 2.2 9.4 1 12c1.2 2.6 5.5 7 11 7s9.8-4.4 11-7c-1.2-2.6-5.5-7-11-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2.2a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6Z"/></svg></button></div>
+      <div class="password-wrap">
+        <input id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password">
+        <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5C6.5 5 2.2 9.4 1 12c1.2 2.6 5.5 7 11 7s9.8-4.4 11-7c-1.2-2.6-5.5-7-11-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2.2a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6Z"/>
+          </svg>
+        </button>
+      </div>
     </div>
 
     <button class="login-btn" onclick="loginDashboard()">Login</button>
-    <div class="login-note">Demo password: admin123</div>
+    <div class="login-note">Password demo: admin123</div>
   </div>
 </div>
 <div class="dashboard">
@@ -570,7 +577,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
       <div class="logo"><div><div class="logo-word">indosat</div><div class="logo-sub">OOREDOO HUTCHISON</div></div><div class="logo-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
       <div class="title"><h1>Indosat Ooredoo Dashboard</h1><p>Spam & Fraud Call Monitoring System</p></div>
     </div>
-    <div class="header-right"><div class="live-box"><span class="live-dot"></span><span class="live-text">LIVE</span><span class="time-label">Live Time</span><span class="time-value" id="liveTime">--:--:--</span><span class="date-value" id="liveDate">--</span></div><button class="report-btn" onclick="openReport()" title="Generate Investigation Report">📄 Report</button><button class="icon-refresh" onclick="refreshDashboard()" title="Refresh Dashboard">⟳</button><button class="logout-btn" onclick="logoutDashboard()">Logout</button></div>
+    <div class="header-right"><div class="live-box"><span class="live-dot"></span><span class="live-text">LIVE</span><span class="time-label">Live Time</span><span class="time-value" id="liveTime">--:--:--</span><span class="date-value" id="liveDate">--</span></div><button class="report-btn" onclick="exportDailyReport()" title="Export Daily Fraud Monitoring Report">📊 Daily Report</button><button class="icon-refresh" onclick="refreshDashboard()" title="Refresh Dashboard">⟳</button><button class="logout-btn" onclick="logoutDashboard()">Logout</button></div>
   </header>
 
   <section class="kpis">
@@ -579,7 +586,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
     <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-green">%</div><div class="kpi-title">Spam Rate</div></div><div class="kpi-value" id="kRate"></div><div class="kpi-change up">+ 2.1% vs yesterday</div><svg class="spark" id="s3"></svg></div>
     <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-blue">⏱</div><div class="kpi-title">Total Duration</div></div><div class="kpi-value" id="kDuration"></div><div class="kpi-change up">+ 10.3% vs yesterday</div><svg class="spark" id="s4"></svg></div>
     <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-purple">👥</div><div class="kpi-title">Unique Numbers</div></div><div class="kpi-value" id="kUnique"></div><div class="kpi-change up">+ 9.8% vs yesterday</div><svg class="spark" id="s5"></svg></div>
-    <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-yellow">🛡</div><div class="kpi-title">Action Queue</div></div><div class="kpi-value" id="kAction"></div><div class="kpi-change down">Block / investigate</div><svg class="spark" id="s6"></svg></div>
+    <div class="card kpi"><div class="kpi-head"><div class="kpi-icon i-yellow">🛡</div><div class="kpi-title">Recommendation Queue</div></div><div class="kpi-value" id="kAction"></div><div class="kpi-change down">High risk review</div><svg class="spark" id="s6"></svg></div>
   </section>
 
   <section class="main-grid">
@@ -595,8 +602,8 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   </section>
 
   <section class="bottom-grid">
-    <div class="card panel"><h3>Number Risk Monitoring & Action</h3><table class="risk-table"><thead><tr><th>Rank</th><th>Phone Number</th><th>Location</th><th>Total Calls</th><th>Spam Calls</th><th>Spam Rate</th><th>Risk Score</th><th>Risk Level</th><th>Recommended Action</th><th>Company Action</th></tr></thead><tbody id="riskTable"></tbody></table></div>
-    <div class="card panel"><h3>Action Log</h3><div class="action-log" id="actionLog"></div></div>
+    <div class="card panel"><h3>Number Risk Monitoring & Recommendation</h3><table class="risk-table"><thead><tr><th>Rank</th><th>Phone Number</th><th>Location</th><th>Total Calls</th><th>Spam Calls</th><th>Spam Rate</th><th>Risk Score</th><th>Risk Level</th><th>Recommended Action</th></tr></thead><tbody id="riskTable"></tbody></table></div>
+    <div class="card panel"><h3>Recommendation Log</h3><div class="action-log" id="actionLog"></div></div>
   </section>
 </div>
 
@@ -608,14 +615,62 @@ let actionLog = JSON.parse(localStorage.getItem('indosat_action_log') || '[]');
 function fmt(n){return Number(n||0).toLocaleString('id-ID')}
 function updateClock(){const now=new Date();document.getElementById('liveTime').textContent=now.toLocaleTimeString('id-ID');document.getElementById('liveDate').textContent=now.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}
 function spark(id,color){const vals=Array.from({length:14},()=>Math.floor(Math.random()*22)+8);const max=Math.max(...vals);const pts=vals.map((v,i)=>`${i*17},${34-(v/max*26)}`).join(' ');document.getElementById(id).innerHTML=`<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2"/><polygon points="0,38 ${pts} 221,38" fill="${color}" opacity=".12"/>`}
-function renderKpi(){document.getElementById('kTotal').textContent=fmt(DATA.kpi.total_calls);document.getElementById('kSpam').textContent=fmt(DATA.kpi.spam_calls);document.getElementById('kRate').textContent=DATA.kpi.spam_rate+'%';document.getElementById('kDuration').textContent=fmt(DATA.kpi.total_duration)+' m';document.getElementById('kUnique').textContent=fmt(DATA.kpi.unique_numbers);document.getElementById('kAction').textContent=fmt(DATA.kpi.blocked_queue);['s1','s2','s3','s4','s5','s6'].forEach((id,i)=>spark(id,i==1||i==5?'#ed1c24':i==3?'#2f7df6':i==4?'#8b5cf6':'#21b573'))}
+function renderKpi(){document.getElementById('kTotal').textContent=fmt(DATA.kpi.total_calls);document.getElementById('kSpam').textContent=fmt(DATA.kpi.spam_calls);document.getElementById('kRate').textContent=DATA.kpi.spam_rate+'%';document.getElementById('kDuration').textContent=fmt(DATA.kpi.total_duration)+' m';document.getElementById('kUnique').textContent=fmt(DATA.kpi.unique_numbers);document.getElementById('kAction').textContent=fmt(getHighRiskRows().length);['s1','s2','s3','s4','s5','s6'].forEach((id,i)=>spark(id,i==1||i==5?'#ed1c24':i==3?'#2f7df6':i==4?'#8b5cf6':'#21b573'))}
 function renderTrend(){const svg=document.getElementById('trendChart');const labels=DATA.monthly.labels;const spam=DATA.monthly.spam;const total=DATA.monthly.total;const w=560,h=250,p=38;const max=Math.max(...total,...spam,1);function points(vals){return vals.map((v,i)=>[p+i*((w-p*2)/Math.max(vals.length-1,1)),h-p-(v/max)*(h-p*2),v])}const ps=points(spam),pt=points(total);const lineS=ps.map(a=>a[0]+','+a[1]).join(' ');const lineT=pt.map(a=>a[0]+','+a[1]).join(' ');let grid='';for(let i=0;i<5;i++){let y=p+i*((h-p*2)/4);grid+=`<line x1="${p}" y1="${y}" x2="${w-p}" y2="${y}" stroke="#e5e7eb"/>`}svg.innerHTML=`${grid}<polyline points="${lineT}" fill="none" stroke="#94a3b8" stroke-width="3"/><polyline points="${lineS}" fill="none" stroke="#ed1c24" stroke-width="4"/><g>${ps.map((a,i)=>`<circle cx="${a[0]}" cy="${a[1]}" r="5" fill="#ed1c24"/><text x="${a[0]}" y="${h-8}" text-anchor="middle" font-size="11" fill="#4b5563">${labels[i]}</text>`).join('')}</g>`}
 function renderHour(){const vals=DATA.hourly.values;const labels=DATA.hourly.labels;const max=Math.max(...vals,1);document.getElementById('hourChart').innerHTML=vals.map((v,i)=>`<div class="bar-group"><div class="bar" title="${labels[i]} · ${v}" style="height:${Math.max(5,v/max*190)}px"></div><div class="bar-label">${i%3===0?labels[i].slice(0,2):''}</div></div>`).join('')}
 function renderRiskDonut(){document.getElementById('donutTotal').textContent=fmt(DATA.kpi.unique_numbers);const colors=['#21b573','#2f7df6','#fbbf24','#ff8a00','#ff3341'];const total=DATA.status_counts.values.reduce((a,b)=>a+b,0);document.getElementById('riskLegend').innerHTML=DATA.status_counts.labels.map((l,i)=>`<div class="legend-row"><span class="swatch" style="background:${colors[i]}"></span><span>${l}</span><b>${DATA.status_counts.values[i]} (${(DATA.status_counts.values[i]/total*100).toFixed(1)}%)</b></div>`).join('')}
 function renderLocations(){const max=Math.max(...DATA.locations.map(l=>l.spam_calls),1);document.getElementById('locationList').innerHTML=DATA.locations.map(l=>`<div class="location-row"><div class="loc-name"><span class="pin">⌖</span>${l.province}</div><div class="progress"><span style="width:${l.spam_calls/max*100}%"></span></div><b>${l.spam_calls}</b><span>${l.percent}%</span></div>`).join('')}
 function renderDay(){const vals=DATA.daily.values,labels=DATA.daily.labels,max=Math.max(...vals,1);document.getElementById('dayChart').innerHTML=vals.map((v,i)=>`<div class="day-col"><b style="font-size:11px;color:${v===max?'#ed1c24':'#111827'}">${v}</b><div class="day-bar" style="height:${Math.max(10,v/max*175)}px;${v===max?'background:#ff3341':''}"></div><div class="day-label">${labels[i]}</div></div>`).join('')}
+
+function getRecommendation(score, level){
+  const s = Number(score || 0);
+  if(s >= 80 || level === 'Critical') return 'Temporary Block';
+  if(s >= 70 || level === 'High') return 'Investigate Further';
+  if(s >= 40 || level === 'Medium') return 'Continue Monitoring';
+  return 'Whitelist Review';
+}
+function recommendationClass(action){
+  if(action.includes('Block')) return 'action-red';
+  if(action.includes('Investigate')) return 'action-orange';
+  if(action.includes('Monitoring')) return 'action-blue';
+  return 'action-green';
+}
+function getRecommendationRows(){
+  return [...DATA.risk]
+    .map(r => ({...r, auto_recommendation:getRecommendation(r.risk_score, r.risk_level)}))
+    .sort((a,b)=>Number(b.risk_score)-Number(a.risk_score));
+}
+function getHighRiskRows(){
+  return getRecommendationRows().filter(r => r.risk_level === 'Critical' || r.risk_level === 'High' || Number(r.risk_score) >= 70);
+}
+function getRecommendationLogRows(){
+  return getHighRiskRows().slice(0,10).map((r,i)=>({
+    time:new Date(Date.now() - i*180000).toLocaleString('id-ID'),
+    number:r.caller_number,
+    recommendation:r.auto_recommendation,
+    score:r.risk_score,
+    level:r.risk_level
+  }));
+}
+
 function actionClass(a){if(a.includes('Block'))return'action-red';if(a.includes('Investigate'))return'action-orange';if(a.includes('Monitor'))return'action-blue';return'action-green'}
-function renderTable(){document.getElementById('riskTable').innerHTML=DATA.risk.map((r,i)=>`<tr><td>${i+1}</td><td><b>${r.caller_number}</b></td><td>${r.location}</td><td>${r.total_calls}</td><td>${r.spam_calls}</td><td><b style="color:${r.spam_rate>50?'#ed1c24':'#16a34a'}">${r.spam_rate}%</b></td><td class="risk-score">${r.risk_score}</td><td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td><td class="${actionClass(r.recommended_action)}">🛡 ${r.recommended_action}</td><td><button class="action-btn btn-block" onclick="takeAction('${r.caller_number}','Block')">Block</button><button class="action-btn btn-investigate" onclick="takeAction('${r.caller_number}','Investigate')">Investigate</button><button class="action-btn btn-safe" onclick="takeAction('${r.caller_number}','Whitelist')">Whitelist</button></td></tr>`).join('')}
+function renderTable(){
+  const rows = getRecommendationRows().slice(0,14);
+  document.getElementById('riskTable').innerHTML=rows.map((r,i)=>{
+    const rec = r.auto_recommendation || getRecommendation(r.risk_score, r.risk_level);
+    return `<tr>
+      <td>${i+1}</td>
+      <td><b>${r.caller_number}</b></td>
+      <td>${r.location}</td>
+      <td>${r.total_calls}</td>
+      <td>${r.spam_calls}</td>
+      <td><b style="color:${r.spam_rate>50?'#ed1c24':'#16a34a'}">${r.spam_rate}%</b></td>
+      <td class="risk-score">${r.risk_score}</td>
+      <td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td>
+      <td class="${recommendationClass(rec)}">🛡 ${rec}</td>
+    </tr>`;
+  }).join('')
+}
 function renderFeed(){
   const activityTypes = [
     'Repeated Short Calls',
@@ -646,16 +701,16 @@ function renderFeed(){
     </tr>`).join('')
 }
 function renderActionLog(){
-  const saved = localStorage.getItem('indosat_action_log');
-  if(saved){
-    try{ actionLog = JSON.parse(saved); }catch(e){ actionLog = []; }
-  }
-  document.getElementById('actionLog').innerHTML = actionLog.length
-    ? actionLog.map(l=>`<div class="log-item"><b>${l.action}</b> · ${l.number}<br><span>${l.time}</span></div>`).join('')
-    : `<div class="log-item">Belum ada tindakan manual.</div>`;
+  const rows = getRecommendationLogRows();
+  const wrap = document.getElementById('actionLog');
+  if(!wrap) return;
+  wrap.innerHTML = rows.length
+    ? rows.map(l=>`<div class="log-item"><b>${l.recommendation}</b> · ${l.number}<br><span>${l.time} · ${l.level} · Score ${l.score}</span></div>`).join('')
+    : `<div class="log-item">Belum ada rekomendasi harian.</div>`;
 }
 function takeAction(number, action){
-  actionLog.unshift({number, action, time:new Date().toLocaleString('id-ID')});
+  renderActionLog();
+});
   localStorage.setItem('indosat_action_log', JSON.stringify(actionLog));
   renderActionLog();
 }
@@ -697,202 +752,104 @@ function logoutDashboard(){
 
 
 
-function getReportRows(){
-  if(typeof DATA !== 'undefined' && DATA.risk){
-    return DATA.risk.slice(0, 8).map((r, idx)=>({
-      rank: idx + 1,
-      number: r.caller_number,
-      location: r.location,
-      risk: r.risk_level,
-      score: r.risk_score,
-      action: r.recommended_action || 'Monitor',
-      reason: r.risk_reason || 'Risk pattern detected'
-    }));
-  }
-  return [];
-}
 
-function getReportKpi(){
-  if(typeof DATA !== 'undefined' && DATA.kpi){
-    return {
-      totalCalls: DATA.kpi.total_calls || 0,
-      spamCalls: DATA.kpi.spam_calls || 0,
-      spamRate: (DATA.kpi.spam_rate || 0) + '%',
-      highRisk: DATA.kpi.high_risk || 0
-    };
-  }
-  return {totalCalls: 0, spamCalls: 0, spamRate:'0%', highRisk:0};
+function escXml(value){
+  return String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+function xmlCell(value, type='String'){
+  return `<Cell><Data ss:Type="${type}">${escXml(value)}</Data></Cell>`;
+}
+function xmlRow(values){
+  return `<Row>${values.map(v=>xmlCell(v)).join('')}</Row>`;
+}
+function exportDailyReport(){
+  const now = new Date();
+  const dateText = now.toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
+  const fileDate = now.toISOString().slice(0,10);
 
-function reportBadgeClass(risk){
-  if(risk === 'Critical') return 'rb-critical';
-  if(risk === 'High') return 'rb-high';
-  if(risk === 'Medium') return 'rb-medium';
-  return 'rb-normal';
+  const highRows = getHighRiskRows();
+  const recLog = getRecommendationLogRows();
+
+  const summaryRows = [
+    ['INDOSAT OOREDOO HUTCHISON'],
+    ['DAILY FRAUD MONITORING REPORT'],
+    ['Generated Date', dateText],
+    ['Generated Time', now.toLocaleTimeString('id-ID')],
+    ['Generated By', 'Fraud Monitoring Dashboard'],
+    [''],
+    ['Metric', 'Value'],
+    ['Total Calls', DATA.kpi.total_calls],
+    ['Spam Calls', DATA.kpi.spam_calls],
+    ['Spam Rate', DATA.kpi.spam_rate + '%'],
+    ['High Risk Numbers', highRows.length],
+    ['Critical Numbers', DATA.risk.filter(r=>r.risk_level === 'Critical').length]
+  ];
+
+  const highRiskRows = [
+    ['No','Phone Number','Location','Total Calls','Spam Calls','Spam Rate','Risk Score','Risk Level','Recommended Action'],
+    ...highRows.map((r,i)=>[
+      i+1,
+      r.caller_number,
+      r.location,
+      r.total_calls,
+      r.spam_calls,
+      r.spam_rate + '%',
+      r.risk_score,
+      r.risk_level,
+      r.auto_recommendation || getRecommendation(r.risk_score, r.risk_level)
+    ])
+  ];
+
+  const logRows = [
+    ['No','Time','Phone Number','Risk Level','Risk Score','Recommendation'],
+    ...recLog.map((r,i)=>[
+      i+1,
+      r.time,
+      r.number,
+      r.level,
+      r.score,
+      r.recommendation
+    ])
+  ];
+
+  const workbook = `<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+ <Worksheet ss:Name="Daily Summary">
+  <Table>${summaryRows.map(xmlRow).join('')}</Table>
+ </Worksheet>
+ <Worksheet ss:Name="High Risk Numbers">
+  <Table>${highRiskRows.map(xmlRow).join('')}</Table>
+ </Worksheet>
+ <Worksheet ss:Name="Recommendation Log">
+  <Table>${logRows.map(xmlRow).join('')}</Table>
+ </Worksheet>
+</Workbook>`;
+
+  const blob = new Blob([workbook], {type:'application/vnd.ms-excel;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Daily_Fraud_Monitoring_Report_${fileDate}.xls`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 function openReport(){
-  const now = new Date();
-  const rows = getReportRows();
-  const k = getReportKpi();
-  const actionLogRaw = localStorage.getItem('indosat_action_log');
-  let actionLog = JSON.parse(localStorage.getItem('indosat_action_log') || '[]');
-  try{ actionLog = actionLogRaw ? JSON.parse(actionLogRaw) : []; }catch(e){ actionLog = []; }
-
-  const reportNo = 'IOH-FMR-' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + String(now.getHours()).padStart(2,'0') + String(now.getMinutes()).padStart(2,'0');
-
-  document.getElementById('reportContent').innerHTML = `
-    <div class="report-header">
-      <div>
-        <div class="report-logo">indo<span>sat</span></div>
-        <div class="report-sub">OOREDOO HUTCHISON</div>
-      </div>
-      <div class="report-meta">
-        <b>Report No:</b> ${reportNo}<br>
-        <b>Generated:</b> ${now.toLocaleString('id-ID')}<br>
-        <b>Department:</b> Fraud Monitoring & Network Security<br>
-        <b>Classification:</b> Internal Use
-      </div>
-    </div>
-
-    <div class="report-title">
-      <h1>Spam & Fraud Call Monitoring Investigation Report</h1>
-      <p>Laporan ini disusun sebagai hasil monitoring aktivitas panggilan berisiko, identifikasi nomor dengan pola komunikasi tidak normal, serta rekomendasi tindakan untuk tim fraud, network security, dan customer protection.</p>
-    </div>
-
-    <div class="report-section">
-      <h2>1. Executive Summary</h2>
-      <p style="font-size:13px;line-height:1.65;color:#374151">
-        Dashboard monitoring mendeteksi aktivitas panggilan yang berpotensi mengarah pada spam/fraud call berdasarkan kombinasi indikator seperti frekuensi panggilan, durasi pendek berulang, banyak receiver unik, failed/missed call, serta pola aktivitas tidak wajar. Laporan ini digunakan sebagai dasar eskalasi tindakan lintas departemen.
-      </p>
-      <div class="report-kpis">
-        <div class="report-kpi"><small>Total Call Records</small><b>${Number(k.totalCalls).toLocaleString('id-ID')}</b></div>
-        <div class="report-kpi"><small>Spam Calls</small><b>${Number(k.spamCalls).toLocaleString('id-ID')}</b></div>
-        <div class="report-kpi"><small>Spam Rate</small><b>${k.spamRate}</b></div>
-        <div class="report-kpi"><small>High Risk Numbers</small><b>${Number(k.highRisk).toLocaleString('id-ID')}</b></div>
-      </div>
-    </div>
-
-    <div class="report-section">
-      <h2>2. High Risk Number Findings</h2>
-      <table class="report-table">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Phone Number</th>
-            <th>Location</th>
-            <th>Risk Level</th>
-            <th>Risk Score</th>
-            <th>Recommended Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows.map(r=>`
-            <tr>
-              <td>${r.rank}</td>
-              <td><b>${r.number}</b></td>
-              <td>${r.location}</td>
-              <td><span class="report-badge ${reportBadgeClass(r.risk)}">${r.risk}</span></td>
-              <td>${r.score}</td>
-              <td>${r.action}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-
-    <div class="report-section">
-      <h2>3. Company Action Log</h2>
-      <table class="report-table">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Phone Number</th>
-            <th>Action</th>
-            <th>Action Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${
-            actionLog.length
-            ? actionLog.slice(0,10).map((a,i)=>`
-              <tr>
-                <td>${i+1}</td>
-                <td><b>${a.number}</b></td>
-                <td>${a.action}</td>
-                <td>${a.time}</td>
-              </tr>`).join('')
-            : `<tr><td colspan="4">Belum ada tindakan manual yang tercatat pada dashboard.</td></tr>`
-          }
-        </tbody>
-      </table>
-    </div>
-
-    <div class="report-section">
-      <h2>4. Recommended Follow-up Actions</h2>
-      <div class="recommendation-list">
-        <div class="recommendation-item"><b>Temporary Block:</b> Nomor dengan kategori Critical dan risk score sangat tinggi direkomendasikan untuk pemblokiran sementara setelah validasi fraud team.</div>
-        <div class="recommendation-item"><b>Investigation Queue:</b> Nomor dengan kategori High perlu dianalisis lanjutan berdasarkan riwayat panggilan, lokasi, spam pattern, dan receiver distribution.</div>
-        <div class="recommendation-item"><b>Monitoring:</b> Nomor Medium tetap dipantau secara berkala dan akan dieskalasi apabila terjadi peningkatan aktivitas mencurigakan.</div>
-        <div class="recommendation-item"><b>Whitelist Review:</b> Nomor yang terbukti merupakan aktivitas resmi perusahaan/call center perlu masuk whitelist agar tidak terjadi false positive.</div>
-      </div>
-    </div>
-
-    <div class="report-section">
-      <h2>5. Department Routing</h2>
-      <table class="report-table">
-        <thead><tr><th>Department</th><th>Responsibility</th><th>Output</th></tr></thead>
-        <tbody>
-          <tr><td>Fraud Monitoring</td><td>Validasi pola spam/fraud dan risk score</td><td>Investigation recommendation</td></tr>
-          <tr><td>Network Security</td><td>Eksekusi temporary block atau network-level restriction</td><td>Blocking status update</td></tr>
-          <tr><td>Customer Protection</td><td>Perlindungan pelanggan dan edukasi risiko panggilan</td><td>Customer warning / notification</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="report-signature">
-      <div class="sign-box">
-        Prepared by<br>
-        Fraud Monitoring Analyst
-      </div>
-      <div class="sign-box">
-        Approved by<br>
-        Network Security Supervisor
-      </div>
-    </div>
-
-    <div class="report-footer">
-      Indosat Ooredoo Hutchison · Spam & Fraud Call Monitoring Report · Internal Business Intelligence Prototype
-    </div>
-  `;
-
-  document.getElementById('reportModal').classList.add('show');
+  exportDailyReport();
 }
+function closeReport(){}
+function printReport(){}
 
-function closeReport(){
-  document.getElementById('reportModal').classList.remove('show');
-}
-
-function printReport(){
-  window.print();
-}
 
 function renderAll(){updateClock();renderKpi();renderTrend();renderHour();renderRiskDonut();renderLocations();renderDay();renderFeed();renderTable();renderActionLog()}
 setInterval(updateClock,1000);setInterval(()=>{feedOffset=(feedOffset+1)%DATA.risk.length;renderFeed()},4000);renderAll();
 </script>
-
-<div class="report-modal" id="reportModal">
-  <div class="report-sheet">
-    <div class="report-toolbar">
-      <strong>Investigation Report Preview</strong>
-      <div>
-        <button class="report-print" onclick="printReport()">Print / Save PDF</button>
-        <button class="report-close" onclick="closeReport()">Close</button>
-      </div>
-    </div>
-    <div class="report-content" id="reportContent"></div>
-  </div>
-</div>
 
 </body>
 </html>
