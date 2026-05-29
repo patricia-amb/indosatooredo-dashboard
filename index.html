@@ -485,23 +485,27 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
 }
 
 
+
 .password-wrap{
   position:relative;
   width:100%;
 }
 .password-wrap input{
   width:100% !important;
-  height:auto;
   padding:14px 48px 14px 15px !important;
-  border:1px solid #e5e7eb;
-  border-radius:15px;
-  font-size:14px;
-  outline:none;
-  background:#fff;
+  border:1px solid #e5e7eb !important;
+  border-radius:15px !important;
+  font-size:14px !important;
+  outline:none !important;
+  background:#fff !important;
 }
 .password-wrap input:focus{
-  border-color:#ed1c24;
-  box-shadow:0 0 0 4px rgba(237,28,36,.08);
+  border-color:#ed1c24 !important;
+  box-shadow:0 0 0 4px rgba(237,28,36,.08) !important;
+}
+.password-wrap input::-ms-reveal,
+.password-wrap input::-ms-clear{
+  display:none !important;
 }
 .password-toggle{
   position:absolute;
@@ -516,12 +520,16 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:16px;
-  color:#6b7280;
   padding:0;
 }
-.password-toggle:hover{
-  color:#111827;
+.password-toggle svg{
+  width:18px;
+  height:18px;
+  fill:#374151;
+  opacity:.78;
+}
+.password-toggle:hover svg{
+  opacity:1;
 }
 
 </style>
@@ -550,7 +558,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
 
     <div class="login-field">
       <label>Password</label>
-      <div class="password-wrap"><div class="password-wrap"><div class="password-wrap"><input id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password"><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><span id="eyeIcon">👁</span></button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><span id="eyeIcon">👁</span></button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password">👁</button></div>
+      <div class="password-wrap"><div class="password-wrap"><div class="password-wrap"><input id="loginPassword" type="password" placeholder="Masukkan password" autocomplete="current-password"><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><svg id="eyeIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5C6.5 5 2.2 9.4 1 12c1.2 2.6 5.5 7 11 7s9.8-4.4 11-7c-1.2-2.6-5.5-7-11-7Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2.2a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6Z"/></svg></button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password"><span id="eyeIcon">👁</span></button></div><button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Tampilkan password">👁</button></div>
     </div>
 
     <button class="login-btn" onclick="loginDashboard()">Login</button>
@@ -857,16 +865,10 @@ setInterval(updateClock,1000);setInterval(()=>{feedOffset=(feedOffset+1)%DATA.ri
 
 function togglePassword(){
   const input = document.getElementById('loginPassword') || document.getElementById('password');
-  const icon = document.getElementById('eyeIcon');
   if(!input) return;
-  if(input.type === 'password'){
-    input.type = 'text';
-    if(icon) icon.textContent = '◉';
-  }else{
-    input.type = 'password';
-    if(icon) icon.textContent = '👁';
-  }
+  input.type = input.type === 'password' ? 'text' : 'password';
 }
+
 function login(){
   const usernameInput = document.getElementById('loginEmail') || document.getElementById('username');
   const passwordInput = document.getElementById('loginPassword') || document.getElementById('password');
