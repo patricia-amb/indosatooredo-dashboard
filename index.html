@@ -285,6 +285,231 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   opacity:1;
 }
 
+
+.report-btn{
+  border:0;
+  background:#111827;
+  color:#fff;
+  border-radius:14px;
+  padding:14px 16px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 12px 26px rgba(15,23,42,.16);
+}
+.report-btn:hover{
+  background:#000;
+}
+.report-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.55);
+  z-index:10000;
+  display:none;
+  align-items:flex-start;
+  justify-content:center;
+  overflow:auto;
+  padding:28px;
+}
+.report-modal.show{
+  display:flex;
+}
+.report-sheet{
+  width:920px;
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 30px 90px rgba(0,0,0,.25);
+  overflow:hidden;
+}
+.report-toolbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:14px 18px;
+  background:#111827;
+  color:#fff;
+}
+.report-toolbar button{
+  border:0;
+  border-radius:10px;
+  padding:10px 13px;
+  font-weight:900;
+  cursor:pointer;
+}
+.report-print{
+  background:#ed1c24;
+  color:#fff;
+}
+.report-close{
+  background:#fff;
+  color:#111827;
+}
+.report-content{
+  padding:34px;
+  color:#111827;
+}
+.report-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  border-bottom:4px solid #ed1c24;
+  padding-bottom:22px;
+  margin-bottom:24px;
+}
+.report-logo{
+  font-size:38px;
+  font-weight:900;
+  letter-spacing:-2px;
+}
+.report-logo span{
+  color:#ed1c24;
+}
+.report-sub{
+  font-size:10px;
+  letter-spacing:2px;
+  color:#555;
+  font-weight:800;
+  margin-top:2px;
+}
+.report-meta{
+  text-align:right;
+  font-size:12px;
+  color:#4b5563;
+  line-height:1.7;
+}
+.report-title{
+  margin-bottom:20px;
+}
+.report-title h1{
+  margin:0;
+  font-size:26px;
+  letter-spacing:-.4px;
+}
+.report-title p{
+  margin-top:8px;
+  color:#6b7280;
+  line-height:1.5;
+}
+.report-section{
+  margin-top:22px;
+}
+.report-section h2{
+  font-size:17px;
+  margin-bottom:12px;
+  padding-bottom:8px;
+  border-bottom:1px solid #e5e7eb;
+}
+.report-kpis{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:12px;
+}
+.report-kpi{
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:14px;
+  background:#fafafa;
+}
+.report-kpi small{
+  display:block;
+  color:#6b7280;
+  font-weight:800;
+  font-size:11px;
+}
+.report-kpi b{
+  display:block;
+  margin-top:7px;
+  font-size:24px;
+}
+.report-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+  font-size:12px;
+}
+.report-table th{
+  background:#9b111e;
+  color:#fff;
+  text-align:left;
+  padding:10px;
+}
+.report-table td{
+  border-bottom:1px solid #e5e7eb;
+  padding:10px;
+}
+.report-badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:10px;
+}
+.rb-critical{background:#fee2e2;color:#991b1b}
+.rb-high{background:#ffedd5;color:#9a3412}
+.rb-medium{background:#fef3c7;color:#854d0e}
+.rb-normal{background:#dcfce7;color:#166534}
+.recommendation-list{
+  display:grid;
+  gap:10px;
+  margin-top:10px;
+}
+.recommendation-item{
+  border-left:5px solid #ed1c24;
+  background:#fff7ed;
+  border-radius:12px;
+  padding:12px 14px;
+  font-size:13px;
+  line-height:1.5;
+}
+.report-signature{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:50px;
+  margin-top:34px;
+}
+.sign-box{
+  border-top:1px solid #111827;
+  padding-top:10px;
+  font-size:12px;
+  color:#4b5563;
+}
+.report-footer{
+  margin-top:24px;
+  padding-top:14px;
+  border-top:1px solid #e5e7eb;
+  font-size:11px;
+  color:#6b7280;
+  text-align:center;
+}
+@media print{
+  body *{
+    visibility:hidden !important;
+  }
+  .report-modal,
+  .report-modal *{
+    visibility:visible !important;
+  }
+  .report-modal{
+    position:absolute;
+    inset:0;
+    padding:0;
+    background:#fff;
+    display:block !important;
+  }
+  .report-sheet{
+    width:100%;
+    box-shadow:none;
+    border-radius:0;
+  }
+  .report-toolbar{
+    display:none;
+  }
+  .report-content{
+    padding:22mm;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -324,7 +549,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
       <div class="logo"><div><div class="logo-word">indosat</div><div class="logo-sub">OOREDOO HUTCHISON</div></div><div class="logo-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
       <div class="title"><h1>Indosat Ooredoo Dashboard</h1><p>Spam & Fraud Call Monitoring System</p></div>
     </div>
-    <div class="header-right"><div class="live-box"><span class="live-dot"></span><span class="live-text">LIVE</span><span class="time-label">Live Time</span><span class="time-value" id="liveTime">--:--:--</span><span class="date-value" id="liveDate">--</span></div><button class="icon-refresh" onclick="refreshDashboard()" title="Refresh Dashboard">⟳</button><button class="logout-btn" onclick="logoutDashboard()">Logout</button></div>
+    <div class="header-right"><div class="live-box"><span class="live-dot"></span><span class="live-text">LIVE</span><span class="time-label">Live Time</span><span class="time-value" id="liveTime">--:--:--</span><span class="date-value" id="liveDate">--</span></div><button class="report-btn" onclick="openReport()" title="Generate Investigation Report">📄 Report</button><button class="icon-refresh" onclick="refreshDashboard()" title="Refresh Dashboard">⟳</button><button class="logout-btn" onclick="logoutDashboard()">Logout</button></div>
   </header>
 
   <section class="kpis">
@@ -447,8 +672,203 @@ function logoutDashboard(){
 
 
 
+
+function getReportRows(){
+  if(typeof DATA !== 'undefined' && DATA.risk){
+    return DATA.risk.slice(0, 8).map((r, idx)=>({
+      rank: idx + 1,
+      number: r.caller_number,
+      location: r.location,
+      risk: r.risk_level,
+      score: r.risk_score,
+      action: r.recommended_action || 'Monitor',
+      reason: r.risk_reason || 'Risk pattern detected'
+    }));
+  }
+  return [];
+}
+
+function getReportKpi(){
+  if(typeof DATA !== 'undefined' && DATA.kpi){
+    return {
+      totalCalls: DATA.kpi.total_calls || 0,
+      spamCalls: DATA.kpi.spam_calls || 0,
+      spamRate: (DATA.kpi.spam_rate || 0) + '%',
+      highRisk: DATA.kpi.high_risk || 0
+    };
+  }
+  return {totalCalls: 0, spamCalls: 0, spamRate:'0%', highRisk:0};
+}
+
+function reportBadgeClass(risk){
+  if(risk === 'Critical') return 'rb-critical';
+  if(risk === 'High') return 'rb-high';
+  if(risk === 'Medium') return 'rb-medium';
+  return 'rb-normal';
+}
+
+function openReport(){
+  const now = new Date();
+  const rows = getReportRows();
+  const k = getReportKpi();
+  const actionLogRaw = localStorage.getItem('indosat_action_log');
+  let actionLog = [];
+  try{ actionLog = actionLogRaw ? JSON.parse(actionLogRaw) : []; }catch(e){ actionLog = []; }
+
+  const reportNo = 'IOH-FMR-' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + String(now.getHours()).padStart(2,'0') + String(now.getMinutes()).padStart(2,'0');
+
+  document.getElementById('reportContent').innerHTML = `
+    <div class="report-header">
+      <div>
+        <div class="report-logo">indo<span>sat</span></div>
+        <div class="report-sub">OOREDOO HUTCHISON</div>
+      </div>
+      <div class="report-meta">
+        <b>Report No:</b> ${reportNo}<br>
+        <b>Generated:</b> ${now.toLocaleString('id-ID')}<br>
+        <b>Department:</b> Fraud Monitoring & Network Security<br>
+        <b>Classification:</b> Internal Use
+      </div>
+    </div>
+
+    <div class="report-title">
+      <h1>Spam & Fraud Call Monitoring Investigation Report</h1>
+      <p>Laporan ini disusun sebagai hasil monitoring aktivitas panggilan berisiko, identifikasi nomor dengan pola komunikasi tidak normal, serta rekomendasi tindakan untuk tim fraud, network security, dan customer protection.</p>
+    </div>
+
+    <div class="report-section">
+      <h2>1. Executive Summary</h2>
+      <p style="font-size:13px;line-height:1.65;color:#374151">
+        Dashboard monitoring mendeteksi aktivitas panggilan yang berpotensi mengarah pada spam/fraud call berdasarkan kombinasi indikator seperti frekuensi panggilan, durasi pendek berulang, banyak receiver unik, failed/missed call, serta pola aktivitas tidak wajar. Laporan ini digunakan sebagai dasar eskalasi tindakan lintas departemen.
+      </p>
+      <div class="report-kpis">
+        <div class="report-kpi"><small>Total Call Records</small><b>${Number(k.totalCalls).toLocaleString('id-ID')}</b></div>
+        <div class="report-kpi"><small>Spam Calls</small><b>${Number(k.spamCalls).toLocaleString('id-ID')}</b></div>
+        <div class="report-kpi"><small>Spam Rate</small><b>${k.spamRate}</b></div>
+        <div class="report-kpi"><small>High Risk Numbers</small><b>${Number(k.highRisk).toLocaleString('id-ID')}</b></div>
+      </div>
+    </div>
+
+    <div class="report-section">
+      <h2>2. High Risk Number Findings</h2>
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Phone Number</th>
+            <th>Location</th>
+            <th>Risk Level</th>
+            <th>Risk Score</th>
+            <th>Recommended Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r=>`
+            <tr>
+              <td>${r.rank}</td>
+              <td><b>${r.number}</b></td>
+              <td>${r.location}</td>
+              <td><span class="report-badge ${reportBadgeClass(r.risk)}">${r.risk}</span></td>
+              <td>${r.score}</td>
+              <td>${r.action}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <h2>3. Company Action Log</h2>
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Phone Number</th>
+            <th>Action</th>
+            <th>Action Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            actionLog.length
+            ? actionLog.slice(0,10).map((a,i)=>`
+              <tr>
+                <td>${i+1}</td>
+                <td><b>${a.number}</b></td>
+                <td>${a.action}</td>
+                <td>${a.time}</td>
+              </tr>`).join('')
+            : `<tr><td colspan="4">Belum ada tindakan manual yang tercatat pada dashboard.</td></tr>`
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <h2>4. Recommended Follow-up Actions</h2>
+      <div class="recommendation-list">
+        <div class="recommendation-item"><b>Temporary Block:</b> Nomor dengan kategori Critical dan risk score sangat tinggi direkomendasikan untuk pemblokiran sementara setelah validasi fraud team.</div>
+        <div class="recommendation-item"><b>Investigation Queue:</b> Nomor dengan kategori High perlu dianalisis lanjutan berdasarkan riwayat panggilan, lokasi, spam pattern, dan receiver distribution.</div>
+        <div class="recommendation-item"><b>Monitoring:</b> Nomor Medium tetap dipantau secara berkala dan akan dieskalasi apabila terjadi peningkatan aktivitas mencurigakan.</div>
+        <div class="recommendation-item"><b>Whitelist Review:</b> Nomor yang terbukti merupakan aktivitas resmi perusahaan/call center perlu masuk whitelist agar tidak terjadi false positive.</div>
+      </div>
+    </div>
+
+    <div class="report-section">
+      <h2>5. Department Routing</h2>
+      <table class="report-table">
+        <thead><tr><th>Department</th><th>Responsibility</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><td>Fraud Monitoring</td><td>Validasi pola spam/fraud dan risk score</td><td>Investigation recommendation</td></tr>
+          <tr><td>Network Security</td><td>Eksekusi temporary block atau network-level restriction</td><td>Blocking status update</td></tr>
+          <tr><td>Customer Protection</td><td>Perlindungan pelanggan dan edukasi risiko panggilan</td><td>Customer warning / notification</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="report-signature">
+      <div class="sign-box">
+        Prepared by<br>
+        Fraud Monitoring Analyst
+      </div>
+      <div class="sign-box">
+        Approved by<br>
+        Network Security Supervisor
+      </div>
+    </div>
+
+    <div class="report-footer">
+      Indosat Ooredoo Hutchison · Spam & Fraud Call Monitoring Report · Internal Business Intelligence Prototype
+    </div>
+  `;
+
+  document.getElementById('reportModal').classList.add('show');
+}
+
+function closeReport(){
+  document.getElementById('reportModal').classList.remove('show');
+}
+
+function printReport(){
+  window.print();
+}
+
 function renderAll(){updateClock();renderKpi();renderTrend();renderHour();renderRiskDonut();renderLocations();renderDay();renderFeed();renderTable();renderActionLog()}
 setInterval(updateClock,1000);setInterval(()=>{feedOffset=(feedOffset+1)%DATA.risk.length;renderFeed()},4000);renderAll();
 </script>
+
+<div class="report-modal" id="reportModal">
+  <div class="report-sheet">
+    <div class="report-toolbar">
+      <strong>Investigation Report Preview</strong>
+      <div>
+        <button class="report-print" onclick="printReport()">Print / Save PDF</button>
+        <button class="report-close" onclick="closeReport()">Close</button>
+      </div>
+    </div>
+    <div class="report-content" id="reportContent"></div>
+  </div>
+</div>
+
 </body>
 </html>
