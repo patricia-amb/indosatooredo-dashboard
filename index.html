@@ -531,6 +531,15 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(-
   opacity:1;
 }
 
+
+.password-wrap{position:relative;width:100%;z-index:2}
+.password-wrap input{width:100%!important;border:1px solid #e5e7eb!important;border-radius:15px!important;padding:14px 48px 14px 15px!important;font-size:14px!important;outline:none!important;background:#fff!important}
+.password-wrap input:focus{border-color:#ed1c24!important;box-shadow:0 0 0 4px rgba(237,28,36,.08)!important}
+.password-wrap input::-ms-reveal,.password-wrap input::-ms-clear{display:none!important}
+.password-toggle{position:absolute;top:50%;right:12px;transform:translateY(-50%);width:32px;height:32px;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;z-index:5}
+.password-toggle svg{width:18px;height:18px;fill:#374151;opacity:.8;pointer-events:none}
+.password-toggle:hover svg{opacity:1}
+
 </style>
 </head>
 <body>
@@ -623,10 +632,10 @@ function renderLocations(){const max=Math.max(...DATA.locations.map(l=>l.spam_ca
 function renderDay(){const vals=DATA.daily.values,labels=DATA.daily.labels,max=Math.max(...vals,1);document.getElementById('dayChart').innerHTML=vals.map((v,i)=>`<div class="day-col"><b style="font-size:11px;color:${v===max?'#ed1c24':'#111827'}">${v}</b><div class="day-bar" style="height:${Math.max(10,v/max*175)}px;${v===max?'background:#ff3341':''}"></div><div class="day-label">${labels[i]}</div></div>`).join('')}
 
 function getRecommendation(score, level){
-  const s = Number(score || 0);
-  if(s >= 80 || level === 'Critical') return 'Temporary Block';
-  if(s >= 70 || level === 'High') return 'Investigate Further';
-  if(s >= 40 || level === 'Medium') return 'Continue Monitoring';
+  const s=Number(score||0);
+  if(s>=80 || level==='Critical') return 'Temporary Block';
+  if(s>=70 || level==='High') return 'Investigate Further';
+  if(s>=40 || level==='Medium') return 'Continue Monitoring';
   return 'Whitelist Review';
 }
 function recommendationClass(action){
@@ -636,28 +645,20 @@ function recommendationClass(action){
   return 'action-green';
 }
 function getRecommendationRows(){
-  return [...DATA.risk]
-    .map(r => ({...r, auto_recommendation:getRecommendation(r.risk_score, r.risk_level)}))
-    .sort((a,b)=>Number(b.risk_score)-Number(a.risk_score));
+  return [...DATA.risk].map(r=>({...r,auto_recommendation:getRecommendation(r.risk_score,r.risk_level)})).sort((a,b)=>Number(b.risk_score)-Number(a.risk_score));
 }
 function getHighRiskRows(){
-  return getRecommendationRows().filter(r => r.risk_level === 'Critical' || r.risk_level === 'High' || Number(r.risk_score) >= 70);
+  return getRecommendationRows().filter(r=>r.risk_level==='Critical'||r.risk_level==='High'||Number(r.risk_score)>=70);
 }
 function getRecommendationLogRows(){
-  return getHighRiskRows().slice(0,10).map((r,i)=>({
-    time:new Date(Date.now() - i*180000).toLocaleString('id-ID'),
-    number:r.caller_number,
-    recommendation:r.auto_recommendation,
-    score:r.risk_score,
-    level:r.risk_level
-  }));
+  return getHighRiskRows().slice(0,10).map((r,i)=>({time:new Date(Date.now()-i*180000).toLocaleString('id-ID'),number:r.caller_number,recommendation:r.auto_recommendation,score:r.risk_score,level:r.risk_level}));
 }
 
 function actionClass(a){if(a.includes('Block'))return'action-red';if(a.includes('Investigate'))return'action-orange';if(a.includes('Monitor'))return'action-blue';return'action-green'}
 function renderTable(){
-  const rows = getRecommendationRows().slice(0,14);
+  const rows=getRecommendationRows().slice(0,14);
   document.getElementById('riskTable').innerHTML=rows.map((r,i)=>{
-    const rec = r.auto_recommendation || getRecommendation(r.risk_score, r.risk_level);
+    const rec=r.auto_recommendation||getRecommendation(r.risk_score,r.risk_level);
     return `<tr>
       <td>${i+1}</td>
       <td><b>${r.caller_number}</b></td>
@@ -669,7 +670,7 @@ function renderTable(){
       <td><span class="risk-pill ${r.risk_level}">${r.risk_level}</span></td>
       <td class="${recommendationClass(rec)}">🛡 ${rec}</td>
     </tr>`;
-  }).join('')
+  }).join('');
 }
 function renderFeed(){
   const activityTypes = [
@@ -701,10 +702,10 @@ function renderFeed(){
     </tr>`).join('')
 }
 function renderActionLog(){
-  const rows = getRecommendationLogRows();
-  const wrap = document.getElementById('actionLog');
+  const rows=getRecommendationLogRows();
+  const wrap=document.getElementById('actionLog');
   if(!wrap) return;
-  wrap.innerHTML = rows.length
+  wrap.innerHTML=rows.length
     ? rows.map(l=>`<div class="log-item"><b>${l.recommendation}</b> · ${l.number}<br><span>${l.time} · ${l.level} · Score ${l.score}</span></div>`).join('')
     : `<div class="log-item">Belum ada rekomendasi harian.</div>`;
 }
@@ -718,31 +719,19 @@ function refreshDashboard(){feedOffset=(feedOffset+1)%DATA.risk.length;DATA.risk
 
 
 
+
 function togglePassword(){
-  const input = document.getElementById('loginPassword') || document.getElementById('password');
+  const input=document.getElementById('loginPassword');
   if(!input) return;
-  input.type = input.type === 'password' ? 'text' : 'password';
+  input.type=input.type==='password'?'text':'password';
 }
 
-
 function loginDashboard(){
-  const usernameInput = document.getElementById('loginEmail') || document.getElementById('username');
-  const passwordInput = document.getElementById('loginPassword') || document.getElementById('password');
-  const username = usernameInput ? usernameInput.value.trim() : '';
-  const pass = passwordInput ? passwordInput.value.trim() : '';
-
-  if(!username || !pass){
-    alert('Username dan password wajib diisi.');
-    return;
-  }
-
-  if(pass !== 'admin123'){
-    alert('Password salah. Gunakan password demo: admin123');
-    return;
-  }
-
-  const screen = document.getElementById('loginScreen');
-  if(screen) screen.style.display = 'none';
+  const username=(document.getElementById('loginEmail')||{}).value?.trim()||'';
+  const pass=(document.getElementById('loginPassword')||{}).value?.trim()||'';
+  if(!username || !pass){alert('Username dan password wajib diisi.');return;}
+  if(pass!=='admin123'){alert('Password salah. Gunakan password demo: admin123');return;}
+  document.getElementById('loginScreen').style.display='none';
 }
 
 function logoutDashboard(){
@@ -750,99 +739,57 @@ function logoutDashboard(){
 }
 
 
-
-
-
-function escXml(value){
-  return String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function xmlCell(value, type='String'){
-  return `<Cell><Data ss:Type="${type}">${escXml(value)}</Data></Cell>`;
-}
-function xmlRow(values){
-  return `<Row>${values.map(v=>xmlCell(v)).join('')}</Row>`;
-}
+function escXml(value){return String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function xmlCell(value,type='String'){return `<Cell><Data ss:Type="${type}">${escXml(value)}</Data></Cell>`;}
+function xmlRow(values){return `<Row>${values.map(v=>xmlCell(v)).join('')}</Row>`;}
 function exportDailyReport(){
-  const now = new Date();
-  const dateText = now.toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
-  const fileDate = now.toISOString().slice(0,10);
-
-  const highRows = getHighRiskRows();
-  const recLog = getRecommendationLogRows();
-
-  const summaryRows = [
+  const now=new Date();
+  const fileDate=now.toISOString().slice(0,10);
+  const highRows=getHighRiskRows();
+  const recLog=getRecommendationLogRows();
+  const summaryRows=[
     ['INDOSAT OOREDOO HUTCHISON'],
     ['DAILY FRAUD MONITORING REPORT'],
-    ['Generated Date', dateText],
-    ['Generated Time', now.toLocaleTimeString('id-ID')],
-    ['Generated By', 'Fraud Monitoring Dashboard'],
+    ['Generated Date',now.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})],
+    ['Generated Time',now.toLocaleTimeString('id-ID')],
+    ['Generated By','Fraud Monitoring Dashboard'],
     [''],
-    ['Metric', 'Value'],
-    ['Total Calls', DATA.kpi.total_calls],
-    ['Spam Calls', DATA.kpi.spam_calls],
-    ['Spam Rate', DATA.kpi.spam_rate + '%'],
-    ['High Risk Numbers', highRows.length],
-    ['Critical Numbers', DATA.risk.filter(r=>r.risk_level === 'Critical').length]
+    ['Metric','Value'],
+    ['Total Calls',DATA.kpi.total_calls],
+    ['Spam Calls',DATA.kpi.spam_calls],
+    ['Spam Rate',DATA.kpi.spam_rate+'%'],
+    ['High Risk Numbers',highRows.length],
+    ['Critical Numbers',DATA.risk.filter(r=>r.risk_level==='Critical').length]
   ];
-
-  const highRiskRows = [
+  const highRiskRows=[
     ['No','Phone Number','Location','Total Calls','Spam Calls','Spam Rate','Risk Score','Risk Level','Recommended Action'],
-    ...highRows.map((r,i)=>[
-      i+1,
-      r.caller_number,
-      r.location,
-      r.total_calls,
-      r.spam_calls,
-      r.spam_rate + '%',
-      r.risk_score,
-      r.risk_level,
-      r.auto_recommendation || getRecommendation(r.risk_score, r.risk_level)
-    ])
+    ...highRows.map((r,i)=>[i+1,r.caller_number,r.location,r.total_calls,r.spam_calls,r.spam_rate+'%',r.risk_score,r.risk_level,r.auto_recommendation||getRecommendation(r.risk_score,r.risk_level)])
   ];
-
-  const logRows = [
+  const logRows=[
     ['No','Time','Phone Number','Risk Level','Risk Score','Recommendation'],
-    ...recLog.map((r,i)=>[
-      i+1,
-      r.time,
-      r.number,
-      r.level,
-      r.score,
-      r.recommendation
-    ])
+    ...recLog.map((r,i)=>[i+1,r.time,r.number,r.level,r.score,r.recommendation])
   ];
-
-  const workbook = `<?xml version="1.0"?>
+  const workbook=`<?xml version="1.0"?>
 <?mso-application progid="Excel.Sheet"?>
 <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
  xmlns:o="urn:schemas-microsoft-com:office:office"
  xmlns:x="urn:schemas-microsoft-com:office:excel"
  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
- <Worksheet ss:Name="Daily Summary">
-  <Table>${summaryRows.map(xmlRow).join('')}</Table>
- </Worksheet>
- <Worksheet ss:Name="High Risk Numbers">
-  <Table>${highRiskRows.map(xmlRow).join('')}</Table>
- </Worksheet>
- <Worksheet ss:Name="Recommendation Log">
-  <Table>${logRows.map(xmlRow).join('')}</Table>
- </Worksheet>
+ <Worksheet ss:Name="Daily Summary"><Table>${summaryRows.map(xmlRow).join('')}</Table></Worksheet>
+ <Worksheet ss:Name="High Risk Numbers"><Table>${highRiskRows.map(xmlRow).join('')}</Table></Worksheet>
+ <Worksheet ss:Name="Recommendation Log"><Table>${logRows.map(xmlRow).join('')}</Table></Worksheet>
 </Workbook>`;
-
-  const blob = new Blob([workbook], {type:'application/vnd.ms-excel;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `Daily_Fraud_Monitoring_Report_${fileDate}.xls`;
+  const blob=new Blob([workbook],{type:'application/vnd.ms-excel;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`Daily_Fraud_Monitoring_Report_${fileDate}.xls`;
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
 }
-
-function openReport(){
-  exportDailyReport();
-}
+function openReport(){exportDailyReport();}
 function closeReport(){}
 function printReport(){}
 
