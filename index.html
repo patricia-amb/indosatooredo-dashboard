@@ -711,9 +711,6 @@ function renderActionLog(){
 }
 function takeAction(number, action){
   renderActionLog();
-});
-  localStorage.setItem('indosat_action_log', JSON.stringify(actionLog));
-  renderActionLog();
 }
 function refreshDashboard(){feedOffset=(feedOffset+1)%DATA.risk.length;DATA.risk.forEach((r,idx)=>{if(idx%4===feedOffset%4){r.risk_score=Math.max(0,Math.min(100,r.risk_score+(Math.random()>.5?1:-1)))}});renderFeed();renderTable();renderKpi()}
 
@@ -721,17 +718,28 @@ function refreshDashboard(){feedOffset=(feedOffset+1)%DATA.risk.length;DATA.risk
 
 
 function togglePassword(){
-  const input=document.getElementById('loginPassword');
+  var input = document.getElementById('loginPassword');
   if(!input) return;
-  input.type=input.type==='password'?'text':'password';
+  input.type = input.type === 'password' ? 'text' : 'password';
 }
 
 function loginDashboard(){
-  const username=(document.getElementById('loginEmail')||{}).value?.trim()||'';
-  const pass=(document.getElementById('loginPassword')||{}).value?.trim()||'';
-  if(!username || !pass){alert('Username dan password wajib diisi.');return;}
-  if(pass!=='admin123'){alert('Password salah. Gunakan password demo: admin123');return;}
-  document.getElementById('loginScreen').style.display='none';
+  var usernameInput = document.getElementById('loginEmail');
+  var passwordInput = document.getElementById('loginPassword');
+  var username = usernameInput ? usernameInput.value.trim() : '';
+  var pass = passwordInput ? passwordInput.value.trim() : '';
+
+  if(username === '' || pass === ''){
+    alert('Username dan password wajib diisi.');
+    return;
+  }
+
+  if(pass !== 'admin123'){
+    alert('Password salah. Gunakan password demo: admin123');
+    return;
+  }
+
+  document.getElementById('loginScreen').style.display = 'none';
 }
 
 function logoutDashboard(){
